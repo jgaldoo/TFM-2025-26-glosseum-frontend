@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:glosseum_frontend/core/widgets/bottom_navbar.dart';
+import 'package:glosseum_frontend/core/widgets/root_layout.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:glosseum_frontend/core/providers/status_provider.dart';

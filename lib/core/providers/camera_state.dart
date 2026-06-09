@@ -1,0 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:camera/camera.dart';
+
+part 'camera_state.freezed.dart';
+
+@freezed
+abstract class CameraState with _$CameraState {
+  const factory CameraState({
+    @Default(false) bool isInitialized,
+    CameraController? controller,
+    XFile? lastPicture,
+    @Default(false) bool permissionGranted,
+  }) = _CameraState;
+}
