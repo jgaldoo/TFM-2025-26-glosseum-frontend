@@ -1,9 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/core/enums/app_screen_enum.dart';
-import 'package:go_router/go_router.dart';
-
-import 'bottom_navbar.dart';
+import 'bottom_navbar/main_navbar.dart';
 
 class RootScaffold extends StatelessWidget {
   final Widget child;
@@ -13,9 +10,7 @@ class RootScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavbar(
-        onTap: (AppScreenEnum appScreen) { context.push(appScreen.route); },
-      ),
+      bottomNavigationBar: MainNavbar(),
     );
   }
 }

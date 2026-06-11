@@ -108,4 +108,10 @@ class _CameraButtonState extends State<CameraButton>
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }

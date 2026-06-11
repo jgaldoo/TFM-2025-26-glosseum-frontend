@@ -5,6 +5,7 @@ import 'glosseum_camera_interface_theme.dart';
 
 class GlosseumTheme {
   static ThemeData light = ThemeData(
+    fontFamily: 'Merriweather Sans',
     brightness: Brightness.light,
     primaryColor: GlosseumColors.primary,
     scaffoldBackgroundColor: GlosseumColors.lightColor,
@@ -17,9 +18,10 @@ class GlosseumTheme {
       indicatorColor: GlosseumColors.secondary,
       labelTextStyle: WidgetStateProperty.all(
         const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: GlosseumColors.lightColor,
+          fontFamily: 'Merriweather Sans',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: GlosseumColors.lightColor,
         ),
       ),
       iconTheme: WidgetStateProperty.all(

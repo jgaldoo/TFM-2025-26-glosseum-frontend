@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:glosseum_frontend/core/models/image_attribute_interface.dart';
+import 'package:glosseum_frontend/core/models/image_attributes.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
 import 'package:glosseum_frontend/core/widgets/icon_slider.dart';
 import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CameraSideMenu extends ConsumerWidget{
-  const CameraSideMenu({super.key});
+class ImageSideMenu extends ConsumerWidget{
+  final ImageAttributeInterface imageAttributeInterface;
+
+  const ImageSideMenu({
+    super.key,
+    required this.imageAttributeInterface,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final attributes = ref.watch(cameraAttributesProvider);
+    final attributes = imageAttributeInterface.state;
     final camInterfaceTheme = cameraInterfaceThemeOf(context);
 
     final double containerWidth = 140;
@@ -36,9 +43,7 @@ class CameraSideMenu extends ConsumerWidget{
                 : Alignment.center,
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () => ref
-                    .read(cameraAttributesProvider.notifier)
-                    .toggleMenu(),
+                onTap: () => imageAttributeInterface.toggleMenu(),
                 child: SizedBox(
                   // Ensure no slider can be reached when the menu is closed
                   width: containerWidth * (1 - closingOffset),
@@ -70,8 +75,7 @@ class CameraSideMenu extends ConsumerWidget{
                     max: attributes.maxZoom,
                     onChanged: (v) =>
                         Future.microtask(() {
-                          ref.read(cameraAttributesProvider.notifier)
-                              .setZoom(v);
+                          imageAttributeInterface.setZoom(v);
                         }),
                   ),
                 ],
@@ -92,8 +96,7 @@ class CameraSideMenu extends ConsumerWidget{
                     max: attributes.maxBrightness,
                     onChanged: (v) =>
                         Future.microtask(() {
-                          ref.read(cameraAttributesProvider.notifier)
-                              .setBrightness(v);
+                          imageAttributeInterface.setBrightness(v);
                         }),
                   ),
                 ],

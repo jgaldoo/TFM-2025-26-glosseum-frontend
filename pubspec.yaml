@@ -34,3 +34,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+fonts:
+  - family: 'Merriweather Sans'
+    fonts:
+      - asset: fonts/MerriweatherSans-Italic-VariableFont_wght.ttf
+        style: italic
+      - asset: fonts/MerriweatherSans-VariableFont_wght.ttf

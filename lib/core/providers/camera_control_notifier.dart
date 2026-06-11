@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:camera/camera.dart';
@@ -9,6 +10,7 @@ part 'camera_control_notifier.g.dart';
 @riverpod
 class CameraNotifier extends _$CameraNotifier {
   bool _isInitializing = false;
+  bool _isDisposing = false;
 
   @override
   CameraState build() => const CameraState();
@@ -75,18 +77,29 @@ class CameraNotifier extends _$CameraNotifier {
   }
 
   Future<void> takePicture() async {
-    if (!state.isInitialized || state.controller == null) return;
+    if (!state.isInitialized || state.controller == null) {
+      throw FlutterError("Tried to take a picture while the camera controller wasn't set."
+                          "Please ensure the controller has been initialized beforehand."
+      );
+    }
 
     final picture = await state.controller!.takePicture();
-    state = state.copyWith(lastPicture: picture);
+    state = state.copyWith(pictureTaken: picture);
   }
 
   void dispose() {
-    state.controller?.dispose();
-    state = state.copyWith(
-      controller: null,
-      isInitialized: false,
-    );
+    if (_isDisposing) return;
+    _isDisposing = true;
+
+    try {
+      state.controller?.dispose();
+      state = state.copyWith(
+        controller: null,
+        isInitialized: false,
+      );
+    } finally {
+      _isDisposing = false;
+    }
   }
 
 }

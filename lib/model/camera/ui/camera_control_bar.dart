@@ -40,7 +40,7 @@ class CameraControlBar extends ConsumerWidget {
                       onPressed: onScreenChange,
                       icon: isCamera ? Icons.qr_code_scanner : Icons.camera_alt_outlined,
                       primary: false,
-                      size: 80,
+                      size: 60,
                     ),
                   ),
                 ),
@@ -50,7 +50,7 @@ class CameraControlBar extends ConsumerWidget {
                   child: CameraButton(
                     onPressed: onActionPressed,
                     icon: isQR ? Icons.qr_code_scanner : Icons.camera_alt_outlined,
-                    size: 100,
+                    size: 80,
                   ),
                 ),
               ),

@@ -1,13 +1,14 @@
 import 'package:async/async.dart';
 import 'package:camera/camera.dart';
-import 'package:glosseum_frontend/model/camera/data/camera_attributes.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:glosseum_frontend/core/models/image_attribute_interface.dart';
+import 'package:glosseum_frontend/core/models/image_attributes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'camera_attributes_notifier.g.dart';
 
 @riverpod
-class CameraAttributesNotifier extends _$CameraAttributesNotifier {
+class CameraAttributesNotifier extends _$CameraAttributesNotifier
+    implements ImageAttributeInterface {
   CameraController? _controller;
   CancelableOperation? _zoomOperation;
   CancelableOperation? _brightnessOperation;
@@ -17,11 +18,13 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier {
   }
 
   @override
-  CameraAttributes build() => const CameraAttributes();
+  ImageAttributes build() => const ImageAttributes();
 
+  @override
   void toggleMenu() => state = state.copyWith(menuOpen: !state.menuOpen);
 
-  Future<void> setZoom(double value) async {
+  @override
+  void setZoom(double value) async {
     state = state.copyWith(zoom: value);
 
     await _zoomOperation?.cancel();
@@ -35,6 +38,7 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier {
     await _zoomOperation!.valueOrCancellation();
   }
 
+  @override
   void setBrightness(double value) async {
     state = state.copyWith(brightness: value);
 
@@ -49,6 +53,7 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier {
     await _brightnessOperation!.valueOrCancellation();
   }
 
+  @override
   void setLimits({
     required double minZoom,
     required double maxZoom,
@@ -61,6 +66,5 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier {
       minBrightness: minBrightness,
       maxBrightness: maxBrightness,
     );
-
   }
 }

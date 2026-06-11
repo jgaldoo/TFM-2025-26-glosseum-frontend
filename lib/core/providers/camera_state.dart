@@ -9,7 +9,7 @@ abstract class CameraState with _$CameraState {
   const factory CameraState({
     @Default(false) bool isInitialized,
     CameraController? controller,
-    XFile? lastPicture,
+    XFile? pictureTaken,
     @Default(false) bool permissionGranted,
   }) = _CameraState;
 }

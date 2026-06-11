@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'camera_attributes_notifier.dart';
+part of 'photo_attributes_notifier.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,28 +9,28 @@ part of 'camera_attributes_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(CameraAttributesNotifier)
-final cameraAttributesProvider = CameraAttributesNotifierProvider._();
+@ProviderFor(PhotoAttributesNotifier)
+final photoAttributesProvider = PhotoAttributesNotifierProvider._();
 
-final class CameraAttributesNotifierProvider
-    extends $NotifierProvider<CameraAttributesNotifier, ImageAttributes> {
-  CameraAttributesNotifierProvider._()
+final class PhotoAttributesNotifierProvider
+    extends $NotifierProvider<PhotoAttributesNotifier, ImageAttributes> {
+  PhotoAttributesNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'cameraAttributesProvider',
+        name: r'photoAttributesProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$cameraAttributesNotifierHash();
+  String debugGetCreateSourceHash() => _$photoAttributesNotifierHash();
 
   @$internal
   @override
-  CameraAttributesNotifier create() => CameraAttributesNotifier();
+  PhotoAttributesNotifier create() => PhotoAttributesNotifier();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(ImageAttributes value) {
@@ -41,10 +41,10 @@ final class CameraAttributesNotifierProvider
   }
 }
 
-String _$cameraAttributesNotifierHash() =>
-    r'e966cac5c49f5294dd0ec8e2a5f67e20310b2bfd';
+String _$photoAttributesNotifierHash() =>
+    r'4ddec2758f51af910e5bf4e330bcc3d039b657bf';
 
-abstract class _$CameraAttributesNotifier extends $Notifier<ImageAttributes> {
+abstract class _$PhotoAttributesNotifier extends $Notifier<ImageAttributes> {
   ImageAttributes build();
   @$mustCallSuper
   @override

@@ -41,7 +41,7 @@ final class CameraNotifierProvider
   }
 }
 
-String _$cameraNotifierHash() => r'082792681341f0e10f61a32d80ae877e69262eea';
+String _$cameraNotifierHash() => r'4738373f4928581a9c19f75338fdb31b71e1e997';
 
 abstract class _$CameraNotifier extends $Notifier<CameraState> {
   CameraState build();
