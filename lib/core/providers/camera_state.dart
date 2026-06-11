@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:camera/camera.dart';
+import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
 
 part 'camera_state.freezed.dart';
 

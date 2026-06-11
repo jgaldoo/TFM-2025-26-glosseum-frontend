@@ -1,3 +1,4 @@
+import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -7,6 +8,8 @@ part 'camera_control_notifier.g.dart';
 
 @riverpod
 class CameraNotifier extends _$CameraNotifier {
+  bool _isInitializing = false;
+
   @override
   CameraState build() => const CameraState();
 
@@ -24,28 +27,51 @@ class CameraNotifier extends _$CameraNotifier {
   }
 
   Future<void> initCamera(bool requestPermission) async {
-    final granted = await checkCameraPermission(requestPermission);
+    if (_isInitializing) return;
+    _isInitializing = true;
 
-    if (!granted) {
-      state = state.copyWith(permissionGranted: false);
-      return;
+    try {
+      final granted = await checkCameraPermission(requestPermission);
+
+      if (!granted) {
+        state = state.copyWith(permissionGranted: false);
+        return;
+      }
+
+      state = state.copyWith(permissionGranted: true);
+
+      final cameras = await availableCameras();
+      final controller = CameraController(
+        cameras.first,
+        ResolutionPreset.high,
+        enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+      );
+
+      await controller.initialize();
+
+      ref.read(cameraAttributesProvider.notifier)
+          .attachController(controller);
+
+      final minZoom = await controller.getMinZoomLevel();
+      final maxZoom = await controller.getMaxZoomLevel();
+      final minExposure = await controller.getMinExposureOffset();
+      final maxExposure = await controller.getMaxExposureOffset();
+
+      ref.read(cameraAttributesProvider.notifier).setLimits(
+        minZoom: minZoom,
+        maxZoom: maxZoom,
+        minBrightness: minExposure,
+        maxBrightness: maxExposure,
+      );
+
+      state = state.copyWith(
+        controller: controller,
+        isInitialized: true,
+      );
+    } finally { // Ensure we remove the initialization flag
+      _isInitializing = false;
     }
-
-    state = state.copyWith(permissionGranted: true);
-
-    final cameras = await availableCameras();
-    final controller = CameraController(
-      cameras.first,
-      ResolutionPreset.high,
-      enableAudio: false,
-    );
-
-    await controller.initialize();
-
-    state = state.copyWith(
-      controller: controller,
-      isInitialized: true,
-    );
   }
 
   Future<void> takePicture() async {
@@ -57,6 +83,10 @@ class CameraNotifier extends _$CameraNotifier {
 
   void dispose() {
     state.controller?.dispose();
+    state = state.copyWith(
+      controller: null,
+      isInitialized: false,
+    );
   }
 
 }

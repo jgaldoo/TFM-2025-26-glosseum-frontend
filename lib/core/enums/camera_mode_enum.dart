@@ -1,0 +1,4 @@
+enum CameraModeEnum {
+  photo,
+  qrScanner;
+}
