@@ -16,15 +16,18 @@ class PhotoPreview extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final photoAttributes = ref.watch(photoAttributesProvider);
 
-    return Transform.scale(
-      scale: photoAttributes.zoom,
-      child: ColorFiltered(
-        colorFilter: brightnessFilter(
-          photoAttributes.brightness,
-        ),
-        child: Image.file(
-          File(imagePath),
-          fit: BoxFit.cover,
+    return Transform.translate( // Move the zoom center towards the center of the image
+      offset: photoAttributes.panningOffset,
+      child: Transform.scale(
+        scale: photoAttributes.zoom,
+        child: ColorFiltered(
+          colorFilter: brightnessFilter(
+            photoAttributes.brightness,
+          ),
+          child: Image.file(
+            File(imagePath),
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );

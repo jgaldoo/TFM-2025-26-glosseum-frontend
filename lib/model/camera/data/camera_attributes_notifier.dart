@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:async/async.dart';
 import 'package:camera/camera.dart';
 import 'package:glosseum_frontend/core/models/image_attribute_interface.dart';
@@ -12,6 +13,9 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier
   CameraController? _controller;
   CancelableOperation? _zoomOperation;
   CancelableOperation? _brightnessOperation;
+  int _lastZoomUpdate = DateTime.now().millisecondsSinceEpoch;
+
+  static const int ZOOM_UPDATE_MILLISECONDS = 16;
 
   void attachController(CameraController? controller) {
     _controller = controller;
@@ -25,13 +29,21 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier
 
   @override
   void setZoom(double value) async {
-    state = state.copyWith(zoom: value);
+    final trueValue = value.clamp(state.minZoom, state.maxZoom);
+    state = state.copyWith(zoom: trueValue);
+
+    // Force updating at a fluid frame rate
+    final now = DateTime
+        .now()
+        .millisecondsSinceEpoch;
+    if (now - _lastZoomUpdate < ZOOM_UPDATE_MILLISECONDS) return;
+    _lastZoomUpdate = now;
 
     await _zoomOperation?.cancel();
 
     _zoomOperation = CancelableOperation.fromFuture(
         _controller != null
-            ? _controller!.setZoomLevel(value)
+            ? _controller!.setZoomLevel(trueValue)
             : Future.value(),
     );
 
@@ -40,13 +52,14 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier
 
   @override
   void setBrightness(double value) async {
-    state = state.copyWith(brightness: value);
+    final trueValue = value.clamp(state.minBrightness, state.maxBrightness);
+    state = state.copyWith(brightness: trueValue);
 
     await _brightnessOperation?.cancel();
 
     _brightnessOperation = CancelableOperation.fromFuture(
     _controller != null
-    ? _controller!.setExposureOffset(value)
+    ? _controller!.setExposureOffset(trueValue)
         : Future.value(),
     );
 
@@ -66,5 +79,36 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier
       minBrightness: minBrightness,
       maxBrightness: maxBrightness,
     );
+  }
+
+  @override
+  void setDisplaySize(Size displaySize) {
+    state = state.copyWith(displaySize: displaySize);
+  }
+
+  @override
+  void setExposurePoint(Offset point) {
+    if (_controller != null) {
+      _controller!.setFocusPoint(point);
+    }
+  }
+
+  @override
+  void setFocusPoint(Offset point) {
+    if (_controller != null) {
+      _controller!.setExposurePoint(point);
+    }
+  }
+
+  // Camera preview won't accept panning
+  @override
+  void setPanningOffset(Offset panning) {
+    return;
+  }
+
+  // Camera preview won't accept panning
+  @override
+  void addPanningOffset(Offset panning) {
+    state = state.copyWith(panningOffset: state.panningOffset + panning);
   }
 }

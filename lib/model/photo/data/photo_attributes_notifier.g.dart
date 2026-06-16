@@ -42,7 +42,7 @@ final class PhotoAttributesNotifierProvider
 }
 
 String _$photoAttributesNotifierHash() =>
-    r'4ddec2758f51af910e5bf4e330bcc3d039b657bf';
+    r'8a4a7fff45e7afb3f6b42fb9e744a17372dfe356';
 
 abstract class _$PhotoAttributesNotifier extends $Notifier<ImageAttributes> {
   ImageAttributes build();

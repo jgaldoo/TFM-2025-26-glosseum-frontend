@@ -9,6 +9,7 @@ import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_nav_entry.da
 import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_navbar.dart';
 import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
 import 'package:glosseum_frontend/model/camera/ui/camera_control_bar.dart';
+import 'package:glosseum_frontend/model/camera/ui/camera_gesture_layer.dart';
 import 'package:glosseum_frontend/model/photo/data/photo_attributes_notifier.dart';
 import 'package:glosseum_frontend/model/photo/ui/photo_preview.dart';
 import 'package:glosseum_frontend/model/qr/ui/qr_overlay.dart';
@@ -101,32 +102,38 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
+          CameraGestureLayer(
+            imageAttributeInterface: _cameraMode == CameraModeEnum.photo
+                ? ref.watch(photoAttributesProvider.notifier)
+                : ref.watch(cameraAttributesProvider.notifier),
+            enablePanning: true,
+            child: IndexedStack(
+              index: _cameraMode.index,
+              children: [
+                // CameraModeEnum.camera
+                state.controller != null
+                    ? SizedBox.expand(child: CameraPreview(state.controller!))
+                    : const SizedBox.shrink(),
 
-          IndexedStack(
-            index: _cameraMode.index,
-            children: [
-              // CameraModeEnum.camera
-              state.controller != null
-                  ? SizedBox.expand(child: CameraPreview(state.controller!))
-                  : const SizedBox.shrink(),
+                // CameraModeEnum.qrScanner
+                const QrOverlay(
+                  borderRadius: 30,
+                  borderLength: 80,
+                  borderWidth: 5,
+                ),
 
-              // CameraModeEnum.qrScanner
-              const QrOverlay(
-                borderRadius: 30,
-                borderLength: 80,
-                borderWidth: 5,
-              ),
-
-              // CameraModeEnum.photo
-              state.controller != null && state.pictureTaken != null
-                  ? SizedBox.expand(
-                      child: PhotoPreview(
-                        imagePath: state.pictureTaken!.path,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ],
+                // CameraModeEnum.photo
+                state.controller != null && state.pictureTaken != null
+                    ? SizedBox.expand(
+                  child: PhotoPreview(
+                    imagePath: state.pictureTaken!.path,
+                  ),
+                )
+                    : const SizedBox.shrink(),
+              ],
+            ),
           ),
+
 
           SafeArea(
             child: Align(

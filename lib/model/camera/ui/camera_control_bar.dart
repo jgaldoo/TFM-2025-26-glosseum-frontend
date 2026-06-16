@@ -23,8 +23,7 @@ class CameraControlBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isQR = cameraMode == CameraModeEnum.qrScanner;
-    final isCamera = cameraMode == CameraModeEnum.photo;
+    final isCamera = cameraMode == CameraModeEnum.camera;
 
     return SafeArea(
         child: SizedBox(
@@ -49,7 +48,7 @@ class CameraControlBar extends ConsumerWidget {
                 child: Center(
                   child: CameraButton(
                     onPressed: onActionPressed,
-                    icon: isQR ? Icons.qr_code_scanner : Icons.camera_alt_outlined,
+                    icon: isCamera ? Icons.camera_alt_outlined : Icons.qr_code_scanner,
                     size: 80,
                   ),
                 ),

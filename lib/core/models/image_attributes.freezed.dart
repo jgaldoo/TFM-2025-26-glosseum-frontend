@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ImageAttributes {
 
- bool get menuOpen; double get zoom; double get brightness; double get minZoom; double get maxZoom; double get minBrightness; double get maxBrightness;
+ bool get menuOpen; double get zoom; double get brightness; Offset get panningOffset; double get minZoom; double get maxZoom; double get minBrightness; double get maxBrightness; Size get displaySize; double get minXPanning; double get maxXPanning; double get minYPanning; double get maxYPanning;
 /// Create a copy of ImageAttributes
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ImageAttributesCopyWith<ImageAttributes> get copyWith => _$ImageAttributesCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImageAttributes&&(identical(other.menuOpen, menuOpen) || other.menuOpen == menuOpen)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.brightness, brightness) || other.brightness == brightness)&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.minBrightness, minBrightness) || other.minBrightness == minBrightness)&&(identical(other.maxBrightness, maxBrightness) || other.maxBrightness == maxBrightness));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ImageAttributes&&(identical(other.menuOpen, menuOpen) || other.menuOpen == menuOpen)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.brightness, brightness) || other.brightness == brightness)&&(identical(other.panningOffset, panningOffset) || other.panningOffset == panningOffset)&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.minBrightness, minBrightness) || other.minBrightness == minBrightness)&&(identical(other.maxBrightness, maxBrightness) || other.maxBrightness == maxBrightness)&&(identical(other.displaySize, displaySize) || other.displaySize == displaySize)&&(identical(other.minXPanning, minXPanning) || other.minXPanning == minXPanning)&&(identical(other.maxXPanning, maxXPanning) || other.maxXPanning == maxXPanning)&&(identical(other.minYPanning, minYPanning) || other.minYPanning == minYPanning)&&(identical(other.maxYPanning, maxYPanning) || other.maxYPanning == maxYPanning));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,menuOpen,zoom,brightness,minZoom,maxZoom,minBrightness,maxBrightness);
+int get hashCode => Object.hash(runtimeType,menuOpen,zoom,brightness,panningOffset,minZoom,maxZoom,minBrightness,maxBrightness,displaySize,minXPanning,maxXPanning,minYPanning,maxYPanning);
 
 @override
 String toString() {
-  return 'ImageAttributes(menuOpen: $menuOpen, zoom: $zoom, brightness: $brightness, minZoom: $minZoom, maxZoom: $maxZoom, minBrightness: $minBrightness, maxBrightness: $maxBrightness)';
+  return 'ImageAttributes(menuOpen: $menuOpen, zoom: $zoom, brightness: $brightness, panningOffset: $panningOffset, minZoom: $minZoom, maxZoom: $maxZoom, minBrightness: $minBrightness, maxBrightness: $maxBrightness, displaySize: $displaySize, minXPanning: $minXPanning, maxXPanning: $maxXPanning, minYPanning: $minYPanning, maxYPanning: $maxYPanning)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ImageAttributesCopyWith<$Res>  {
   factory $ImageAttributesCopyWith(ImageAttributes value, $Res Function(ImageAttributes) _then) = _$ImageAttributesCopyWithImpl;
 @useResult
 $Res call({
- bool menuOpen, double zoom, double brightness, double minZoom, double maxZoom, double minBrightness, double maxBrightness
+ bool menuOpen, double zoom, double brightness, Offset panningOffset, double minZoom, double maxZoom, double minBrightness, double maxBrightness, Size displaySize, double minXPanning, double maxXPanning, double minYPanning, double maxYPanning
 });
 
 
@@ -62,15 +62,21 @@ class _$ImageAttributesCopyWithImpl<$Res>
 
 /// Create a copy of ImageAttributes
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? menuOpen = null,Object? zoom = null,Object? brightness = null,Object? minZoom = null,Object? maxZoom = null,Object? minBrightness = null,Object? maxBrightness = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? menuOpen = null,Object? zoom = null,Object? brightness = null,Object? panningOffset = null,Object? minZoom = null,Object? maxZoom = null,Object? minBrightness = null,Object? maxBrightness = null,Object? displaySize = null,Object? minXPanning = null,Object? maxXPanning = null,Object? minYPanning = null,Object? maxYPanning = null,}) {
   return _then(_self.copyWith(
 menuOpen: null == menuOpen ? _self.menuOpen : menuOpen // ignore: cast_nullable_to_non_nullable
 as bool,zoom: null == zoom ? _self.zoom : zoom // ignore: cast_nullable_to_non_nullable
 as double,brightness: null == brightness ? _self.brightness : brightness // ignore: cast_nullable_to_non_nullable
-as double,minZoom: null == minZoom ? _self.minZoom : minZoom // ignore: cast_nullable_to_non_nullable
+as double,panningOffset: null == panningOffset ? _self.panningOffset : panningOffset // ignore: cast_nullable_to_non_nullable
+as Offset,minZoom: null == minZoom ? _self.minZoom : minZoom // ignore: cast_nullable_to_non_nullable
 as double,maxZoom: null == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
 as double,minBrightness: null == minBrightness ? _self.minBrightness : minBrightness // ignore: cast_nullable_to_non_nullable
 as double,maxBrightness: null == maxBrightness ? _self.maxBrightness : maxBrightness // ignore: cast_nullable_to_non_nullable
+as double,displaySize: null == displaySize ? _self.displaySize : displaySize // ignore: cast_nullable_to_non_nullable
+as Size,minXPanning: null == minXPanning ? _self.minXPanning : minXPanning // ignore: cast_nullable_to_non_nullable
+as double,maxXPanning: null == maxXPanning ? _self.maxXPanning : maxXPanning // ignore: cast_nullable_to_non_nullable
+as double,minYPanning: null == minYPanning ? _self.minYPanning : minYPanning // ignore: cast_nullable_to_non_nullable
+as double,maxYPanning: null == maxYPanning ? _self.maxYPanning : maxYPanning // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }
@@ -156,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool menuOpen,  double zoom,  double brightness,  double minZoom,  double maxZoom,  double minBrightness,  double maxBrightness)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool menuOpen,  double zoom,  double brightness,  Offset panningOffset,  double minZoom,  double maxZoom,  double minBrightness,  double maxBrightness,  Size displaySize,  double minXPanning,  double maxXPanning,  double minYPanning,  double maxYPanning)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ImageAttributes() when $default != null:
-return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.minZoom,_that.maxZoom,_that.minBrightness,_that.maxBrightness);case _:
+return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.panningOffset,_that.minZoom,_that.maxZoom,_that.minBrightness,_that.maxBrightness,_that.displaySize,_that.minXPanning,_that.maxXPanning,_that.minYPanning,_that.maxYPanning);case _:
   return orElse();
 
 }
@@ -177,10 +183,10 @@ return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.minZoom,_that.m
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool menuOpen,  double zoom,  double brightness,  double minZoom,  double maxZoom,  double minBrightness,  double maxBrightness)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool menuOpen,  double zoom,  double brightness,  Offset panningOffset,  double minZoom,  double maxZoom,  double minBrightness,  double maxBrightness,  Size displaySize,  double minXPanning,  double maxXPanning,  double minYPanning,  double maxYPanning)  $default,) {final _that = this;
 switch (_that) {
 case _ImageAttributes():
-return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.minZoom,_that.maxZoom,_that.minBrightness,_that.maxBrightness);case _:
+return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.panningOffset,_that.minZoom,_that.maxZoom,_that.minBrightness,_that.maxBrightness,_that.displaySize,_that.minXPanning,_that.maxXPanning,_that.minYPanning,_that.maxYPanning);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +203,10 @@ return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.minZoom,_that.m
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool menuOpen,  double zoom,  double brightness,  double minZoom,  double maxZoom,  double minBrightness,  double maxBrightness)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool menuOpen,  double zoom,  double brightness,  Offset panningOffset,  double minZoom,  double maxZoom,  double minBrightness,  double maxBrightness,  Size displaySize,  double minXPanning,  double maxXPanning,  double minYPanning,  double maxYPanning)?  $default,) {final _that = this;
 switch (_that) {
 case _ImageAttributes() when $default != null:
-return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.minZoom,_that.maxZoom,_that.minBrightness,_that.maxBrightness);case _:
+return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.panningOffset,_that.minZoom,_that.maxZoom,_that.minBrightness,_that.maxBrightness,_that.displaySize,_that.minXPanning,_that.maxXPanning,_that.minYPanning,_that.maxYPanning);case _:
   return null;
 
 }
@@ -212,16 +218,22 @@ return $default(_that.menuOpen,_that.zoom,_that.brightness,_that.minZoom,_that.m
 
 
 class _ImageAttributes implements ImageAttributes {
-  const _ImageAttributes({this.menuOpen = false, this.zoom = 1.0, this.brightness = 0.0, this.minZoom = 1.0, this.maxZoom = 4.0, this.minBrightness = -2.0, this.maxBrightness = 2.0});
+  const _ImageAttributes({this.menuOpen = false, this.zoom = 1.0, this.brightness = 0.0, this.panningOffset = Offset.zero, this.minZoom = 1.0, this.maxZoom = 4.0, this.minBrightness = -2.0, this.maxBrightness = 2.0, this.displaySize = Size.zero, this.minXPanning = 0.0, this.maxXPanning = 0.0, this.minYPanning = 0.0, this.maxYPanning = 0.0});
   
 
 @override@JsonKey() final  bool menuOpen;
 @override@JsonKey() final  double zoom;
 @override@JsonKey() final  double brightness;
+@override@JsonKey() final  Offset panningOffset;
 @override@JsonKey() final  double minZoom;
 @override@JsonKey() final  double maxZoom;
 @override@JsonKey() final  double minBrightness;
 @override@JsonKey() final  double maxBrightness;
+@override@JsonKey() final  Size displaySize;
+@override@JsonKey() final  double minXPanning;
+@override@JsonKey() final  double maxXPanning;
+@override@JsonKey() final  double minYPanning;
+@override@JsonKey() final  double maxYPanning;
 
 /// Create a copy of ImageAttributes
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +245,16 @@ _$ImageAttributesCopyWith<_ImageAttributes> get copyWith => __$ImageAttributesCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImageAttributes&&(identical(other.menuOpen, menuOpen) || other.menuOpen == menuOpen)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.brightness, brightness) || other.brightness == brightness)&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.minBrightness, minBrightness) || other.minBrightness == minBrightness)&&(identical(other.maxBrightness, maxBrightness) || other.maxBrightness == maxBrightness));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ImageAttributes&&(identical(other.menuOpen, menuOpen) || other.menuOpen == menuOpen)&&(identical(other.zoom, zoom) || other.zoom == zoom)&&(identical(other.brightness, brightness) || other.brightness == brightness)&&(identical(other.panningOffset, panningOffset) || other.panningOffset == panningOffset)&&(identical(other.minZoom, minZoom) || other.minZoom == minZoom)&&(identical(other.maxZoom, maxZoom) || other.maxZoom == maxZoom)&&(identical(other.minBrightness, minBrightness) || other.minBrightness == minBrightness)&&(identical(other.maxBrightness, maxBrightness) || other.maxBrightness == maxBrightness)&&(identical(other.displaySize, displaySize) || other.displaySize == displaySize)&&(identical(other.minXPanning, minXPanning) || other.minXPanning == minXPanning)&&(identical(other.maxXPanning, maxXPanning) || other.maxXPanning == maxXPanning)&&(identical(other.minYPanning, minYPanning) || other.minYPanning == minYPanning)&&(identical(other.maxYPanning, maxYPanning) || other.maxYPanning == maxYPanning));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,menuOpen,zoom,brightness,minZoom,maxZoom,minBrightness,maxBrightness);
+int get hashCode => Object.hash(runtimeType,menuOpen,zoom,brightness,panningOffset,minZoom,maxZoom,minBrightness,maxBrightness,displaySize,minXPanning,maxXPanning,minYPanning,maxYPanning);
 
 @override
 String toString() {
-  return 'ImageAttributes(menuOpen: $menuOpen, zoom: $zoom, brightness: $brightness, minZoom: $minZoom, maxZoom: $maxZoom, minBrightness: $minBrightness, maxBrightness: $maxBrightness)';
+  return 'ImageAttributes(menuOpen: $menuOpen, zoom: $zoom, brightness: $brightness, panningOffset: $panningOffset, minZoom: $minZoom, maxZoom: $maxZoom, minBrightness: $minBrightness, maxBrightness: $maxBrightness, displaySize: $displaySize, minXPanning: $minXPanning, maxXPanning: $maxXPanning, minYPanning: $minYPanning, maxYPanning: $maxYPanning)';
 }
 
 
@@ -253,7 +265,7 @@ abstract mixin class _$ImageAttributesCopyWith<$Res> implements $ImageAttributes
   factory _$ImageAttributesCopyWith(_ImageAttributes value, $Res Function(_ImageAttributes) _then) = __$ImageAttributesCopyWithImpl;
 @override @useResult
 $Res call({
- bool menuOpen, double zoom, double brightness, double minZoom, double maxZoom, double minBrightness, double maxBrightness
+ bool menuOpen, double zoom, double brightness, Offset panningOffset, double minZoom, double maxZoom, double minBrightness, double maxBrightness, Size displaySize, double minXPanning, double maxXPanning, double minYPanning, double maxYPanning
 });
 
 
@@ -270,15 +282,21 @@ class __$ImageAttributesCopyWithImpl<$Res>
 
 /// Create a copy of ImageAttributes
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? menuOpen = null,Object? zoom = null,Object? brightness = null,Object? minZoom = null,Object? maxZoom = null,Object? minBrightness = null,Object? maxBrightness = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? menuOpen = null,Object? zoom = null,Object? brightness = null,Object? panningOffset = null,Object? minZoom = null,Object? maxZoom = null,Object? minBrightness = null,Object? maxBrightness = null,Object? displaySize = null,Object? minXPanning = null,Object? maxXPanning = null,Object? minYPanning = null,Object? maxYPanning = null,}) {
   return _then(_ImageAttributes(
 menuOpen: null == menuOpen ? _self.menuOpen : menuOpen // ignore: cast_nullable_to_non_nullable
 as bool,zoom: null == zoom ? _self.zoom : zoom // ignore: cast_nullable_to_non_nullable
 as double,brightness: null == brightness ? _self.brightness : brightness // ignore: cast_nullable_to_non_nullable
-as double,minZoom: null == minZoom ? _self.minZoom : minZoom // ignore: cast_nullable_to_non_nullable
+as double,panningOffset: null == panningOffset ? _self.panningOffset : panningOffset // ignore: cast_nullable_to_non_nullable
+as Offset,minZoom: null == minZoom ? _self.minZoom : minZoom // ignore: cast_nullable_to_non_nullable
 as double,maxZoom: null == maxZoom ? _self.maxZoom : maxZoom // ignore: cast_nullable_to_non_nullable
 as double,minBrightness: null == minBrightness ? _self.minBrightness : minBrightness // ignore: cast_nullable_to_non_nullable
 as double,maxBrightness: null == maxBrightness ? _self.maxBrightness : maxBrightness // ignore: cast_nullable_to_non_nullable
+as double,displaySize: null == displaySize ? _self.displaySize : displaySize // ignore: cast_nullable_to_non_nullable
+as Size,minXPanning: null == minXPanning ? _self.minXPanning : minXPanning // ignore: cast_nullable_to_non_nullable
+as double,maxXPanning: null == maxXPanning ? _self.maxXPanning : maxXPanning // ignore: cast_nullable_to_non_nullable
+as double,minYPanning: null == minYPanning ? _self.minYPanning : minYPanning // ignore: cast_nullable_to_non_nullable
+as double,maxYPanning: null == maxYPanning ? _self.maxYPanning : maxYPanning // ignore: cast_nullable_to_non_nullable
 as double,
   ));
 }

@@ -42,7 +42,7 @@ final class CameraAttributesNotifierProvider
 }
 
 String _$cameraAttributesNotifierHash() =>
-    r'e966cac5c49f5294dd0ec8e2a5f67e20310b2bfd';
+    r'70bc4b5230d1170fb3327bb81be11e49d30b8481';
 
 abstract class _$CameraAttributesNotifier extends $Notifier<ImageAttributes> {
   ImageAttributes build();
