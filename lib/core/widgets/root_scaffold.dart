@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'bottom_navbar/main_navbar.dart';
+import 'package:glosseum_frontend/core/widgets/bottom_navbar/main_navbar.dart';
 
 class RootScaffold extends StatelessWidget {
   final Widget child;

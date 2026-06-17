@@ -87,7 +87,8 @@ class FocusPoint extends StatelessWidget {
                 children: [
                   Positioned(
                     left: brightnessBarSpacing,
-                    top: focusDisplayOffset!.dy - (brightnessBarHeight / 2) - (iconSize / 2),
+                    top: focusDisplayOffset!.dy - (brightnessBarHeight / 2)
+                        - (iconSize / 2),
                     child: SizedBox(
                       height: brightnessBarHeight + iconSize,
                       width: 40,
@@ -104,7 +105,8 @@ class FocusPoint extends StatelessWidget {
                           ),
                           TransparentCircle(
                             radius: (iconSize/2) + 1,
-                            offset: Offset(20, brightnessBarCircleHeight + (iconSize/2))
+                            offset: Offset(20, brightnessBarCircleHeight
+                                + (iconSize/2))
                           ),
                           Positioned(
                             left: 20 - (iconSize/2),

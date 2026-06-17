@@ -99,7 +99,11 @@ class _QrCornerPainter extends CustomPainter {
       Path()
           ..moveTo(size.width - length, size.height)
           ..lineTo(size.width - radius, size.height)
-          ..quadraticBezierTo(size.width, size.height, size.width, size.height - radius)
+          ..quadraticBezierTo(size.width,
+              size.height,
+              size.width,
+              size.height - radius
+          )
           ..lineTo(size.width, size.height - length),
       paint,
     );

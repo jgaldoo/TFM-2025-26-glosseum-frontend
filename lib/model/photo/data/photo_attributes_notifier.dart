@@ -22,8 +22,10 @@ class PhotoAttributesNotifier extends _$PhotoAttributesNotifier implements
     final trueValue = value.clamp(state.minZoom, state.maxZoom);
 
     // Update panning constraints to ensure panning is appropriate
-    final maxPanningWidth = ((state.displaySize.width * trueValue) - state.displaySize.width)/2;
-    final maxPanningHeight = ((state.displaySize.height * trueValue) - state.displaySize.height)/2;
+    final maxPanningWidth = ((state.displaySize.width * trueValue)
+        - state.displaySize.width)/2;
+    final maxPanningHeight = ((state.displaySize.height * trueValue)
+        - state.displaySize.height)/2;
 
     state = state.copyWith(
       zoom: trueValue,
@@ -91,8 +93,10 @@ class PhotoAttributesNotifier extends _$PhotoAttributesNotifier implements
   void addPanningOffset(Offset panning) {
     state = state.copyWith(
       panningOffset: Offset(
-        (state.panningOffset.dx + panning.dx).clamp(state.minXPanning, state.maxXPanning),
-        (state.panningOffset.dy + panning.dy).clamp(state.minYPanning, state.maxYPanning),
+        (state.panningOffset.dx + panning.dx)
+            .clamp(state.minXPanning, state.maxXPanning),
+        (state.panningOffset.dy + panning.dy)
+            .clamp(state.minYPanning, state.maxYPanning),
       ),
     );
   }

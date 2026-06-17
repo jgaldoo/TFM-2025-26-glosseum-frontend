@@ -16,7 +16,7 @@ class PhotoPreview extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final photoAttributes = ref.watch(photoAttributesProvider);
 
-    return Transform.translate( // Move the zoom center towards the center of the image
+    return Transform.translate(
       offset: photoAttributes.panningOffset,
       child: Transform.scale(
         scale: photoAttributes.zoom,

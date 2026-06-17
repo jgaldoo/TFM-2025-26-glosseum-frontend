@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/models/image_attribute_interface.dart';
-import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
 import 'package:glosseum_frontend/core/utils/image_utils.dart';
 import 'package:glosseum_frontend/core/widgets/focus_point.dart';
 
@@ -27,7 +26,6 @@ class CameraGestureLayer extends StatefulWidget {
 
 class _CameraGestureLayerState extends State<CameraGestureLayer> {
   late double _gestureZoom;
-  late int _lastZoomUpdate = 0;
   Offset? _focusPoint;
   final double _focusPointSize = 60;
   final double _focusPointPadding = 25;
@@ -90,7 +88,8 @@ class _CameraGestureLayerState extends State<CameraGestureLayer> {
             else if (details.pointerCount == 1 && widget.enablePanning) {
 
 
-              widget.imageAttributeInterface.addPanningOffset(details.focalPointDelta);
+              widget.imageAttributeInterface
+                  .addPanningOffset(details.focalPointDelta);
             }
           },
 
@@ -132,8 +131,10 @@ class _CameraGestureLayerState extends State<CameraGestureLayer> {
                   containerSizeWidth: size.width,
                   focusDisplayOffset: focusDisplayOffset,
                   brightness: widget.imageAttributeInterface.state.brightness,
-                  minBrightness: widget.imageAttributeInterface.state.minBrightness,
-                  maxBrightness: widget.imageAttributeInterface.state.maxBrightness,
+                  minBrightness: widget.imageAttributeInterface.state
+                      .minBrightness,
+                  maxBrightness: widget.imageAttributeInterface.state
+                      .maxBrightness,
                 ),
             ],
           ),

@@ -25,7 +25,9 @@ class GlosseumIcon extends StatelessWidget {
       asset.assetPath,
       width: size ?? iconTheme.size ?? _sizeDefault,
       height: size ?? iconTheme.size ?? _sizeDefault,
-      colorFilter: ColorFilter.mode(color ?? iconTheme.color ?? _colorDefault, BlendMode.srcIn),
+      colorFilter: ColorFilter.mode(
+          color ?? iconTheme.color ?? _colorDefault, BlendMode.srcIn
+      ),
     );
   }
 }

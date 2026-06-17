@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/core/config/app_screen_groups.dart';
-import 'package:glosseum_frontend/core/enums/app_screen_enum.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_colors.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon_data.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class BottomNavEntry extends ConsumerWidget {
@@ -22,7 +19,8 @@ class BottomNavEntry extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final navTheme = Theme.of(context).navigationBarTheme;
-    final labelStyle = navTheme.labelTextStyle?.resolve({}) ?? const TextStyle();
+    final labelStyle = navTheme.labelTextStyle?.resolve({})
+        ?? const TextStyle();
     final iconTheme = navTheme.iconTheme?.resolve({}) ?? const IconThemeData();
 
     return Expanded(
@@ -35,8 +33,8 @@ class BottomNavEntry extends ConsumerWidget {
         child: Container(
           decoration: const BoxDecoration(
             border: Border(
-              left: BorderSide(color: GlosseumColors.darkColor, width: 1),
-              right: BorderSide(color: GlosseumColors.darkColor, width: 1),
+              left: BorderSide(color: GlosseumColors.darkColor, width: 0.5),
+              right: BorderSide(color: GlosseumColors.darkColor, width: 0.5),
             ),
           ),
           child: Center(

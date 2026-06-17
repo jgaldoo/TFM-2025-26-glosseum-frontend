@@ -7,7 +7,7 @@ class AppConfig {
 
   const AppConfig({
     required this.backendUrl,
-    this.port = "",
+    this.port = '',
     this.enableLogging = false,
   });
 }

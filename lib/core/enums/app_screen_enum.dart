@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/model/home/ui/home_screen.dart';
-
 enum AppScreenEnum {
   home,
   qrScanner,

@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 
-class GlosseumCameraInterfaceTheme extends ThemeExtension<GlosseumCameraInterfaceTheme> {
+class GlosseumCameraInterfaceTheme
+    extends ThemeExtension<GlosseumCameraInterfaceTheme> {
   final Color primaryBackground;
   final Color primaryIconColor;
 
@@ -31,7 +32,10 @@ class GlosseumCameraInterfaceTheme extends ThemeExtension<GlosseumCameraInterfac
   }
 
   @override
-  ThemeExtension<GlosseumCameraInterfaceTheme> lerp(covariant ThemeExtension<GlosseumCameraInterfaceTheme>? other, double t) {
+  ThemeExtension<GlosseumCameraInterfaceTheme> lerp(
+      covariant ThemeExtension<GlosseumCameraInterfaceTheme>? other,
+      double t
+  ) {
     if (other is! GlosseumCameraInterfaceTheme) return this;
 
     return GlosseumCameraInterfaceTheme(
@@ -52,12 +56,14 @@ class GlosseumCameraInterfaceTheme extends ThemeExtension<GlosseumCameraInterfac
 }
 
 GlosseumCameraInterfaceTheme cameraInterfaceThemeOf(BuildContext context) {
-  final cameraInterfaceTheme = Theme.of(context).extension<GlosseumCameraInterfaceTheme>();
+  final cameraInterfaceTheme = Theme.of(context)
+      .extension<GlosseumCameraInterfaceTheme>();
 
   if (cameraInterfaceTheme == null) {
     throw FlutterError(
-        "GlosseumCameraInterfaceTheme hasn't been found in ThemeData.extensions.\n"
-            "Please ensure you've added this to GlosseumTheme before retrying."
+        "GlosseumCameraInterfaceTheme hasn't been found in "
+            "ThemeData.extensions.\n Please ensure you've added this to "
+            'GlosseumTheme before retrying.'
     );
   }
 

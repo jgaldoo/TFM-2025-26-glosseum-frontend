@@ -3,7 +3,7 @@ import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.d
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'camera_state.dart';
+import 'package:glosseum_frontend/core/providers/camera_state.dart';
 
 part 'camera_control_notifier.g.dart';
 
@@ -78,8 +78,9 @@ class CameraNotifier extends _$CameraNotifier {
 
   Future<void> takePicture() async {
     if (!state.isInitialized || state.controller == null) {
-      throw FlutterError("Tried to take a picture while the camera controller wasn't set."
-                          "Please ensure the controller has been initialized beforehand."
+      throw FlutterError('Tried to take a picture while the camera controller '
+          "wasn't set. Please ensure the controller has been initialized "
+          'beforehand.'
       );
     }
 

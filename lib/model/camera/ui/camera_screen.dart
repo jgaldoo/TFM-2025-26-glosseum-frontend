@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
 import 'package:glosseum_frontend/core/providers/camera_control_notifier.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
-import 'package:glosseum_frontend/core/utils/image_utils.dart';
 import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_nav_entry.dart';
 import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_navbar.dart';
 import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
@@ -75,8 +72,20 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(cameraProvider);
-    final camAttributes = ref.watch(cameraAttributesProvider);
-    final photoAttributes = ref.watch(photoAttributesProvider);
+
+    // Trigger rebuild when cameraAttributes or photoAttributes are changed
+    ref.listen(cameraAttributesProvider, (_, _) {
+      if (_cameraMode == CameraModeEnum.camera ||
+          _cameraMode == CameraModeEnum.qrScanner) {
+        setState(() {});
+      }
+    });
+
+    ref.listen(photoAttributesProvider, (_, _) {
+      if (_cameraMode == CameraModeEnum.photo) {
+        setState(() {});
+      }
+    });
 
     if (!state.permissionGranted) {
       return Scaffold(
@@ -84,7 +93,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Camera permission not granted"),
+                Text('Camera permission not granted'),
                 ElevatedButton(onPressed: () {
                   openAppSettings();
                 }, child: const Text('Go to Settings')),
@@ -215,7 +224,8 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     final cameraNotifier = ref.read(cameraProvider.notifier);
 
     // Register when the user moves away from the camera
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
       _cameraPaused = true;
       cameraNotifier.dispose();
     }

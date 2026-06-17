@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_colors.dart';
 
-import 'glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
 
 class GlosseumTheme {
   static ThemeData light = ThemeData(

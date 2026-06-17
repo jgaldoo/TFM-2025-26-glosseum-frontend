@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/models/image_attribute_interface.dart';
-import 'package:glosseum_frontend/core/models/image_attributes.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/widgets/icon_slider.dart';
-import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ImageSideMenu extends ConsumerWidget{
@@ -26,7 +24,9 @@ class ImageSideMenu extends ConsumerWidget{
 
     return AnimatedSlide(
       duration: const Duration(milliseconds: 250),
-      offset: attributes.menuOpen ? Offset.zero : const Offset(closingOffset, 0.0),
+      offset: attributes.menuOpen
+          ? Offset.zero
+          : const Offset(closingOffset, 0.0),
       child: Container(
         width: containerWidth,
         height: 300,
@@ -52,7 +52,9 @@ class ImageSideMenu extends ConsumerWidget{
                     child: Transform.translate(
                       offset: const Offset(-5, 0),
                       child: Icon(
-                        attributes.menuOpen ? Icons.chevron_right : Icons.chevron_left,
+                        attributes.menuOpen
+                            ? Icons.chevron_right
+                            : Icons.chevron_left,
                         color: camInterfaceTheme.primaryIconColor,
                         size: 45,
                       ),

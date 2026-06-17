@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/core/config/app_screen_groups.dart';
-import 'package:glosseum_frontend/core/enums/app_screen_enum.dart';
-import 'package:glosseum_frontend/core/theme/glosseum_colors.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'bottom_nav_entry.dart';
+import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_nav_entry.dart';
 
 class BottomNavbar<T> extends ConsumerWidget {
   final List<BottomNavEntry> entries;

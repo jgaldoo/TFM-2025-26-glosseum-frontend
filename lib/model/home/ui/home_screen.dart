@@ -8,7 +8,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final status = ref.watch(statusProvider);
+     var status = ref.watch(statusProvider);
 
      return Scaffold(
          body: Center(
@@ -25,9 +25,9 @@ class HomeScreen extends ConsumerWidget {
 
                ElevatedButton(
                  onPressed: () {
-                   ref.refresh(statusProvider);
+                   status = ref.refresh(statusProvider);
                  },
-                 child: const Text("Refresh status"),
+                 child: const Text('Refresh status'),
                ),
              ],
            ),

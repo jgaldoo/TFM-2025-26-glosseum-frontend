@@ -19,19 +19,19 @@ final router = GoRouter(
           GoRoute(
             path: '/',
             name: 'home',
-            builder: (_, __) => const HomeScreen(),
+            builder: (_, _) => const HomeScreen(),
           ),
         ]),
     // with CameraBar
     GoRoute(
       path: '/qrScanner',
       name: 'qrScanner',
-      builder: (_, __) => CameraScreen(cameraMode: CameraModeEnum.qrScanner),
+      builder: (_, _) => CameraScreen(cameraMode: CameraModeEnum.qrScanner),
     ),
     GoRoute(
       path: '/camera',
       name: 'camera',
-      builder: (_, __) => CameraScreen(cameraMode: CameraModeEnum.camera),
+      builder: (_, _) => CameraScreen(cameraMode: CameraModeEnum.camera),
     ),
     /*GoRoute(
       path: '/content/:id',

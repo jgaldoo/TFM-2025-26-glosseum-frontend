@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'image_attributes.dart';
+import 'package:glosseum_frontend/core/models/image_attributes.dart';
 
 abstract class ImageAttributeInterface {
   ImageAttributes get state;

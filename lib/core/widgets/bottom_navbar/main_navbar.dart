@@ -15,18 +15,24 @@ class MainNavbar extends StatelessWidget {
       entries: [
         BottomNavEntry(
           icon: GlosseumIcons.menu,
-          label: "Menú",
-          onTap: () => context.push(AppScreenGroups.bottomNavbarScreens[0].route),
+          label: 'Menú',
+          onTap: () => context.push(
+              AppScreenGroups.bottomNavbarScreens[0].route
+          ),
         ),
         BottomNavEntry(
           icon: GlosseumIcons.qr_code_scanner,
-          label: "Escanear QR",
-          onTap: () => context.push(AppScreenGroups.bottomNavbarScreens[1].route),
+          label: 'Escanear QR',
+          onTap: () => context.push(
+              AppScreenGroups.bottomNavbarScreens[1].route
+          ),
         ),
         BottomNavEntry(
           icon: GlosseumIcons.camera,
-          label: "Transcribir",
-          onTap: () => context.push(AppScreenGroups.bottomNavbarScreens[2].route),
+          label: 'Transcribir',
+          onTap: () => context.push(
+              AppScreenGroups.bottomNavbarScreens[2].route
+          ),
         ),
       ],
     );

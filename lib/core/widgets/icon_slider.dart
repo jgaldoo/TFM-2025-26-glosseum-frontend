@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon_data.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class IconSlider extends StatelessWidget {
   final Axis axis;

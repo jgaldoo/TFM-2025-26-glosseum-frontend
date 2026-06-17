@@ -7,7 +7,8 @@ final dioProvider = Provider<Dio>((ref) {
 
   final dio = Dio(
       BaseOptions(
-        baseUrl: "${appConfig.backendUrl}${appConfig.port != "" ? ":${appConfig.port}" : ""}"
+        baseUrl: '${appConfig.backendUrl}'
+            '${appConfig.port != '' ? ':${appConfig.port}' : ''}'
     )
   );
 
