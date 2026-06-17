@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CameraState {
 
- bool get isInitialized; CameraController? get controller; XFile? get lastPicture; bool get permissionGranted;
+ bool get isInitialized; CameraController? get controller; XFile? get pictureTaken; bool get permissionGranted;
 /// Create a copy of CameraState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CameraStateCopyWith<CameraState> get copyWith => _$CameraStateCopyWithImpl<Came
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CameraState&&(identical(other.isInitialized, isInitialized) || other.isInitialized == isInitialized)&&(identical(other.controller, controller) || other.controller == controller)&&(identical(other.lastPicture, lastPicture) || other.lastPicture == lastPicture)&&(identical(other.permissionGranted, permissionGranted) || other.permissionGranted == permissionGranted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CameraState&&(identical(other.isInitialized, isInitialized) || other.isInitialized == isInitialized)&&(identical(other.controller, controller) || other.controller == controller)&&(identical(other.pictureTaken, pictureTaken) || other.pictureTaken == pictureTaken)&&(identical(other.permissionGranted, permissionGranted) || other.permissionGranted == permissionGranted));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isInitialized,controller,lastPicture,permissionGranted);
+int get hashCode => Object.hash(runtimeType,isInitialized,controller,pictureTaken,permissionGranted);
 
 @override
 String toString() {
-  return 'CameraState(isInitialized: $isInitialized, controller: $controller, lastPicture: $lastPicture, permissionGranted: $permissionGranted)';
+  return 'CameraState(isInitialized: $isInitialized, controller: $controller, pictureTaken: $pictureTaken, permissionGranted: $permissionGranted)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CameraStateCopyWith<$Res>  {
   factory $CameraStateCopyWith(CameraState value, $Res Function(CameraState) _then) = _$CameraStateCopyWithImpl;
 @useResult
 $Res call({
- bool isInitialized, CameraController? controller, XFile? lastPicture, bool permissionGranted
+ bool isInitialized, CameraController? controller, XFile? pictureTaken, bool permissionGranted
 });
 
 
@@ -62,11 +62,11 @@ class _$CameraStateCopyWithImpl<$Res>
 
 /// Create a copy of CameraState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isInitialized = null,Object? controller = freezed,Object? lastPicture = freezed,Object? permissionGranted = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isInitialized = null,Object? controller = freezed,Object? pictureTaken = freezed,Object? permissionGranted = null,}) {
   return _then(_self.copyWith(
 isInitialized: null == isInitialized ? _self.isInitialized : isInitialized // ignore: cast_nullable_to_non_nullable
 as bool,controller: freezed == controller ? _self.controller : controller // ignore: cast_nullable_to_non_nullable
-as CameraController?,lastPicture: freezed == lastPicture ? _self.lastPicture : lastPicture // ignore: cast_nullable_to_non_nullable
+as CameraController?,pictureTaken: freezed == pictureTaken ? _self.pictureTaken : pictureTaken // ignore: cast_nullable_to_non_nullable
 as XFile?,permissionGranted: null == permissionGranted ? _self.permissionGranted : permissionGranted // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -153,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isInitialized,  CameraController? controller,  XFile? lastPicture,  bool permissionGranted)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isInitialized,  CameraController? controller,  XFile? pictureTaken,  bool permissionGranted)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CameraState() when $default != null:
-return $default(_that.isInitialized,_that.controller,_that.lastPicture,_that.permissionGranted);case _:
+return $default(_that.isInitialized,_that.controller,_that.pictureTaken,_that.permissionGranted);case _:
   return orElse();
 
 }
@@ -174,10 +174,10 @@ return $default(_that.isInitialized,_that.controller,_that.lastPicture,_that.per
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isInitialized,  CameraController? controller,  XFile? lastPicture,  bool permissionGranted)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isInitialized,  CameraController? controller,  XFile? pictureTaken,  bool permissionGranted)  $default,) {final _that = this;
 switch (_that) {
 case _CameraState():
-return $default(_that.isInitialized,_that.controller,_that.lastPicture,_that.permissionGranted);case _:
+return $default(_that.isInitialized,_that.controller,_that.pictureTaken,_that.permissionGranted);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +194,10 @@ return $default(_that.isInitialized,_that.controller,_that.lastPicture,_that.per
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isInitialized,  CameraController? controller,  XFile? lastPicture,  bool permissionGranted)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isInitialized,  CameraController? controller,  XFile? pictureTaken,  bool permissionGranted)?  $default,) {final _that = this;
 switch (_that) {
 case _CameraState() when $default != null:
-return $default(_that.isInitialized,_that.controller,_that.lastPicture,_that.permissionGranted);case _:
+return $default(_that.isInitialized,_that.controller,_that.pictureTaken,_that.permissionGranted);case _:
   return null;
 
 }
@@ -209,12 +209,12 @@ return $default(_that.isInitialized,_that.controller,_that.lastPicture,_that.per
 
 
 class _CameraState implements CameraState {
-  const _CameraState({this.isInitialized = false, this.controller, this.lastPicture, this.permissionGranted = false});
+  const _CameraState({this.isInitialized = false, this.controller, this.pictureTaken, this.permissionGranted = false});
   
 
 @override@JsonKey() final  bool isInitialized;
 @override final  CameraController? controller;
-@override final  XFile? lastPicture;
+@override final  XFile? pictureTaken;
 @override@JsonKey() final  bool permissionGranted;
 
 /// Create a copy of CameraState
@@ -227,16 +227,16 @@ _$CameraStateCopyWith<_CameraState> get copyWith => __$CameraStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CameraState&&(identical(other.isInitialized, isInitialized) || other.isInitialized == isInitialized)&&(identical(other.controller, controller) || other.controller == controller)&&(identical(other.lastPicture, lastPicture) || other.lastPicture == lastPicture)&&(identical(other.permissionGranted, permissionGranted) || other.permissionGranted == permissionGranted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CameraState&&(identical(other.isInitialized, isInitialized) || other.isInitialized == isInitialized)&&(identical(other.controller, controller) || other.controller == controller)&&(identical(other.pictureTaken, pictureTaken) || other.pictureTaken == pictureTaken)&&(identical(other.permissionGranted, permissionGranted) || other.permissionGranted == permissionGranted));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isInitialized,controller,lastPicture,permissionGranted);
+int get hashCode => Object.hash(runtimeType,isInitialized,controller,pictureTaken,permissionGranted);
 
 @override
 String toString() {
-  return 'CameraState(isInitialized: $isInitialized, controller: $controller, lastPicture: $lastPicture, permissionGranted: $permissionGranted)';
+  return 'CameraState(isInitialized: $isInitialized, controller: $controller, pictureTaken: $pictureTaken, permissionGranted: $permissionGranted)';
 }
 
 
@@ -247,7 +247,7 @@ abstract mixin class _$CameraStateCopyWith<$Res> implements $CameraStateCopyWith
   factory _$CameraStateCopyWith(_CameraState value, $Res Function(_CameraState) _then) = __$CameraStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isInitialized, CameraController? controller, XFile? lastPicture, bool permissionGranted
+ bool isInitialized, CameraController? controller, XFile? pictureTaken, bool permissionGranted
 });
 
 
@@ -264,11 +264,11 @@ class __$CameraStateCopyWithImpl<$Res>
 
 /// Create a copy of CameraState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isInitialized = null,Object? controller = freezed,Object? lastPicture = freezed,Object? permissionGranted = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isInitialized = null,Object? controller = freezed,Object? pictureTaken = freezed,Object? permissionGranted = null,}) {
   return _then(_CameraState(
 isInitialized: null == isInitialized ? _self.isInitialized : isInitialized // ignore: cast_nullable_to_non_nullable
 as bool,controller: freezed == controller ? _self.controller : controller // ignore: cast_nullable_to_non_nullable
-as CameraController?,lastPicture: freezed == lastPicture ? _self.lastPicture : lastPicture // ignore: cast_nullable_to_non_nullable
+as CameraController?,pictureTaken: freezed == pictureTaken ? _self.pictureTaken : pictureTaken // ignore: cast_nullable_to_non_nullable
 as XFile?,permissionGranted: null == permissionGranted ? _self.permissionGranted : permissionGranted // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

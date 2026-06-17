@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/core/widgets/bottom_navbar.dart';
+import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
+import 'package:glosseum_frontend/core/widgets/bottom_navbar/main_navbar.dart';
 import 'package:glosseum_frontend/model/camera/ui/camera_screen.dart';
 import 'package:glosseum_frontend/model/home/ui/home_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +12,7 @@ final router = GoRouter(
         builder: (context, state, child) {
           return Scaffold(
             body: child,
-            bottomNavigationBar: const BottomNavbar(),
+            bottomNavigationBar: MainNavbar(),
           );
         },
         routes: [
@@ -25,12 +26,12 @@ final router = GoRouter(
     GoRoute(
       path: '/qrScanner',
       name: 'qrScanner',
-      builder: (_, __) => const HomeScreen(),
+      builder: (_, __) => CameraScreen(cameraMode: CameraModeEnum.qrScanner),
     ),
     GoRoute(
       path: '/camera',
       name: 'camera',
-      builder: (_, __) => const CameraScreen(),
+      builder: (_, __) => CameraScreen(cameraMode: CameraModeEnum.camera),
     ),
     /*GoRoute(
       path: '/content/:id',
