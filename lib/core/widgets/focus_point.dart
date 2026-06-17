@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/widgets/transparent_circle.dart';
 
 class FocusPoint extends StatelessWidget {
@@ -107,8 +109,8 @@ class FocusPoint extends StatelessWidget {
                           Positioned(
                             left: 20 - (iconSize/2),
                             top: brightnessBarCircleHeight,
-                            child: Icon(
-                              Icons.brightness_7,
+                            child: GlosseumIcon(
+                              GlosseumIcons.sun,
                               color: cameraInterfaceTheme.primaryIconColor,
                               size: iconSize,
                             ),

@@ -38,8 +38,6 @@ class _CameraGestureLayerState extends State<CameraGestureLayer> {
 
   @override
   Widget build(BuildContext context) {
-    final cameraInterfaceTheme = cameraInterfaceThemeOf(context);
-
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = constraints.biggest;

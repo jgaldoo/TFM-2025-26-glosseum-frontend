@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/config/app_screen_groups.dart';
 import 'package:glosseum_frontend/core/enums/app_screen_enum.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_colors.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icon_data.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class BottomNavEntry extends ConsumerWidget {
-  final IconData icon;
+  final GlosseumIconData icon;
   final String label;
   final Future<void> Function()? onTap;
 
@@ -43,14 +45,9 @@ class BottomNavEntry extends ConsumerWidget {
                 children: [
                   Text(label, style: labelStyle),
                   const SizedBox(height: 4),
-                  Icon(
+                  GlosseumIcon(
                     icon,
                     color: iconTheme.color,
-                    applyTextScaling: iconTheme.applyTextScaling,
-                    fill: iconTheme.fill,
-                    grade: iconTheme.grade,
-                    opticalSize: iconTheme.opticalSize,
-                    shadows: iconTheme.shadows,
                     size: iconTheme.size,
                   )
                 ],

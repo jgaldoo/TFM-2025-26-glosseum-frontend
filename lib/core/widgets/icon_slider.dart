@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icon_data.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class IconSlider extends StatelessWidget {
   final Axis axis;
-  final IconData lowerValueIcon;
-  final IconData higherValueIcon;
+  final GlosseumIconData lowerValueIcon;
+  final GlosseumIconData higherValueIcon;
   final double size;
   final double value;
   final double min;
@@ -30,7 +32,7 @@ class IconSlider extends StatelessWidget {
     final camInterfaceTheme = cameraInterfaceThemeOf(context);
 
     final content = [
-      Icon(
+      GlosseumIcon(
         isVertical ? higherValueIcon : lowerValueIcon,
         color: camInterfaceTheme.primaryIconColor,
         size: size,
@@ -44,7 +46,7 @@ class IconSlider extends StatelessWidget {
           onChanged: onChanged,
         ),
       ),
-      Icon(
+      GlosseumIcon(
         isVertical ? lowerValueIcon : higherValueIcon,
         color: camInterfaceTheme.primaryIconColor,
         size: size,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/models/image_attribute_interface.dart';
 import 'package:glosseum_frontend/core/models/image_attributes.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/widgets/icon_slider.dart';
 import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -67,8 +68,8 @@ class ImageSideMenu extends ConsumerWidget{
                 children: [
                   IconSlider(
                     axis: Axis.vertical,
-                    lowerValueIcon: Icons.zoom_out,
-                    higherValueIcon: Icons.zoom_in,
+                    lowerValueIcon: GlosseumIcons.zoom_out,
+                    higherValueIcon: GlosseumIcons.zoom_in,
                     size: 30,
                     value: attributes.zoom,
                     min: attributes.minZoom,
@@ -88,8 +89,8 @@ class ImageSideMenu extends ConsumerWidget{
                 children: [
                   IconSlider(
                     axis: Axis.vertical,
-                    lowerValueIcon: Icons.brightness_2,
-                    higherValueIcon: Icons.brightness_7,
+                    lowerValueIcon: GlosseumIcons.moon,
+                    higherValueIcon: GlosseumIcons.sun,
                     size: 30,
                     value: attributes.brightness,
                     min: attributes.minBrightness,

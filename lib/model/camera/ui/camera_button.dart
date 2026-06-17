@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icon_data.dart';
 
 class CameraButton extends StatefulWidget {
-  final IconData? icon;
+  final GlosseumIconData icon;
   final VoidCallback onPressed;
   final bool primary;
   final double size;
@@ -10,7 +12,7 @@ class CameraButton extends StatefulWidget {
   const CameraButton({
     super.key,
     required this.onPressed,
-    this.icon,
+    required this.icon,
     this.primary = true,
     this.size = 56
   });
@@ -54,27 +56,6 @@ class _CameraButtonState extends State<CameraButton>
         ? camInterfaceTheme.primaryBackground.withValues(alpha: 0.2)
         : camInterfaceTheme.secondaryBackground.withValues(alpha: 0.2);
 
-/*    return Material(
-      color: background,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        splashColor: background.withValues(alpha: 0.2),
-        highlightColor: background.withValues(alpha: 0.1),
-        onTap: widget.onPressed,
-        child: SizedBox(
-            width: widget.size,
-            height: widget.size,
-            child: Center(
-              child: widget.icon != null
-                ? Icon(widget.icon, color: iconColor, size: widget.size * 0.5)
-                : null,
-            ),
-          ),
-      )
-    );*/
-
-
     return GestureDetector(
       onTap: _animate,
       child: Stack(
@@ -91,17 +72,19 @@ class _CameraButtonState extends State<CameraButton>
               ),
             ),
             child: Container(
-                width: widget.size*0.8,
-                height: widget.size*0.8,
-                decoration: BoxDecoration(
-                  color: background,
-                  shape: BoxShape.circle,
+              width: widget.size*0.8,
+              height: widget.size*0.8,
+              decoration: BoxDecoration(
+                color: background,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: GlosseumIcon(
+                  widget.icon,
+                  color: iconColor,
+                  size: widget.size*0.5
                 ),
-                child: (
-                    widget.icon != null
-                        ? Icon(widget.icon, color: iconColor, size: widget.size*0.5)
-                        : null
-                )
+              ),
             ),
           ),
         ],

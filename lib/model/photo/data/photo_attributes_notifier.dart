@@ -40,7 +40,9 @@ class PhotoAttributesNotifier extends _$PhotoAttributesNotifier implements
 
   @override
   void setBrightness(double value) {
-    state = state.copyWith(brightness: value);
+    final trueValue = value.clamp(state.minBrightness, state.maxBrightness);
+
+    state = state.copyWith(brightness: trueValue);
   }
 
   @override

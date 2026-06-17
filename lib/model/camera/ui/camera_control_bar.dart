@@ -4,6 +4,7 @@ import 'package:glosseum_frontend/core/enums/app_screen_enum.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_colors.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_theme.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
@@ -37,7 +38,7 @@ class CameraControlBar extends ConsumerWidget {
                     padding: const EdgeInsets.only(right: 5),
                     child : CameraButton(
                       onPressed: onScreenChange,
-                      icon: isCamera ? Icons.qr_code_scanner : Icons.camera_alt_outlined,
+                      icon: isCamera ? GlosseumIcons.qr_code_scanner : GlosseumIcons.camera,
                       primary: false,
                       size: 60,
                     ),
@@ -48,7 +49,7 @@ class CameraControlBar extends ConsumerWidget {
                 child: Center(
                   child: CameraButton(
                     onPressed: onActionPressed,
-                    icon: isCamera ? Icons.camera_alt_outlined : Icons.qr_code_scanner,
+                    icon: isCamera ? GlosseumIcons.camera : GlosseumIcons.qr_code_scanner,
                     size: 80,
                   ),
                 ),

@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
 import 'package:glosseum_frontend/core/providers/camera_control_notifier.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/utils/image_utils.dart';
 import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_nav_entry.dart';
 import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_navbar.dart';
@@ -171,7 +172,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       ? BottomNavbar(
           entries: [
             BottomNavEntry(
-              icon: Icons.arrow_back,
+              icon: GlosseumIcons.back,
               label: 'Atrás',
               onTap: () async => {
                 setState(() {
@@ -180,7 +181,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
               },
             ),
             BottomNavEntry(
-              icon: Icons.image_search,
+              icon: GlosseumIcons.identify,
               label: 'Identificar',
               onTap: () async => {
                 // await petición a API
@@ -188,7 +189,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
               },
             ),
             BottomNavEntry(
-              icon: Icons.image_search,
+              icon: GlosseumIcons.transcribe,
               label: 'Transcribir',
               onTap: () async => {
                 // await petición a API
