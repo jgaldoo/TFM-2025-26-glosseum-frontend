@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:glosseum_frontend/core/providers/status_provider.dart';
@@ -18,7 +19,14 @@ class HomeScreen extends ConsumerWidget {
                status.when(
                  loading: () => const CircularProgressIndicator(),
                  error: (e, _) => Text('Error: $e'),
-                 data: (msg) => Text(msg),
+                 data: (msg) => msg.when(
+                   success: (data, statusCode, message) {
+                     return Text('Code: $statusCode\n$message\nContent: $data');
+                   },
+                   error: (errorType, statusCode, message) {
+                     return Text('Code: $statusCode, $errorType\n$message\n');
+                   },
+                 ),
                ),
 
                const SizedBox(height: 20),

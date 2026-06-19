@@ -1,0 +1,4 @@
+enum InformationTypeEnum {
+  transcribed,
+  generated,
+}

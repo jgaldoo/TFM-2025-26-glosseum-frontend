@@ -32,7 +32,7 @@ class _CameraGestureLayerState extends State<CameraGestureLayer> {
   Timer? _focusTimer;
   bool showFocus = false;
 
-  static const int FOCUS_POINT_SHOW_SECONDS = 1;
+  static const int _focusPointShowSeconds = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class _CameraGestureLayerState extends State<CameraGestureLayer> {
               widget.imageAttributeInterface.setBrightness(newBrightness);
 
               _focusTimer = Timer(
-                  const Duration(seconds: FOCUS_POINT_SHOW_SECONDS),
+                  const Duration(seconds: _focusPointShowSeconds),
                       () {
                     setState(() {
                       showFocus = false;
@@ -112,7 +112,7 @@ class _CameraGestureLayerState extends State<CameraGestureLayer> {
 
             // Wait X seconds to remove the focus circle
             _focusTimer = Timer(
-                const Duration(seconds: FOCUS_POINT_SHOW_SECONDS),
+                const Duration(seconds: _focusPointShowSeconds),
                 () {
                   setState(() {
                     showFocus = false;

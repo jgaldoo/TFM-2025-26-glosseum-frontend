@@ -6,6 +6,7 @@ import 'package:glosseum_frontend/core/providers/theme_notifier.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(
       child: MainApp(),
   ));
