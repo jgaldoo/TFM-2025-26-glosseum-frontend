@@ -1,4 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'app_config.g.dart';
 
 class AppConfig {
   final String backendUrl;
@@ -12,10 +15,11 @@ class AppConfig {
   });
 }
 
-final appConfigProvider = Provider<AppConfig>((ref) {
+@Riverpod(keepAlive: true)
+AppConfig appConfig(Ref ref) {
   return const AppConfig(
-      backendUrl: 'http://10.0.2.2',
+      backendUrl: 'http://192.168.1.33',
       port: '8000',
       enableLogging: true
   );
-});
+}

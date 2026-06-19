@@ -15,7 +15,7 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier
   CancelableOperation? _brightnessOperation;
   int _lastZoomUpdate = DateTime.now().millisecondsSinceEpoch;
 
-  static const int ZOOM_UPDATE_MILLISECONDS = 16;
+  static const int _zoomUpdateMilliseconds = 16;
 
   void attachController(CameraController? controller) {
     _controller = controller;
@@ -36,7 +36,7 @@ class CameraAttributesNotifier extends _$CameraAttributesNotifier
     final now = DateTime
         .now()
         .millisecondsSinceEpoch;
-    if (now - _lastZoomUpdate < ZOOM_UPDATE_MILLISECONDS) return;
+    if (now - _lastZoomUpdate < _zoomUpdateMilliseconds) return;
     _lastZoomUpdate = now;
 
     await _zoomOperation?.cancel();

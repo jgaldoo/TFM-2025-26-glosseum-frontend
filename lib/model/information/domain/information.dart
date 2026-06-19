@@ -1,6 +1,3 @@
-// TEMP DEBUG
-// ignore: unused_import
-import 'dart:developer';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'information.freezed.dart';
