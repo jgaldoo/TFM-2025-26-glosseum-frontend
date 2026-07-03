@@ -38,6 +38,7 @@ flutter:
   uses-material-design: true
   assets:
     - 'assets/icons/arrow_left.svg'
+    - 'assets/icons/arrow_right.svg'
     - 'assets/icons/camera.svg'
     - 'assets/icons/check.svg'
     - 'assets/icons/cross.svg'

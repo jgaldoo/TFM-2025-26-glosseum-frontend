@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InformationDTO {
 
- String get title; InformationTypeEnum get informationType; bool get isSimplified; String get content;
+ String get title; String get content; InformationTypeEnum get informationType; bool get isSimplified;
 /// Create a copy of InformationDTO
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $InformationDTOCopyWith<InformationDTO> get copyWith => _$InformationDTOCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InformationDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified)&&(identical(other.content, content) || other.content == content));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InformationDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,informationType,isSimplified,content);
+int get hashCode => Object.hash(runtimeType,title,content,informationType,isSimplified);
 
 @override
 String toString() {
-  return 'InformationDTO(title: $title, informationType: $informationType, isSimplified: $isSimplified, content: $content)';
+  return 'InformationDTO(title: $title, content: $content, informationType: $informationType, isSimplified: $isSimplified)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $InformationDTOCopyWith<$Res>  {
   factory $InformationDTOCopyWith(InformationDTO value, $Res Function(InformationDTO) _then) = _$InformationDTOCopyWithImpl;
 @useResult
 $Res call({
- String title, InformationTypeEnum informationType, bool isSimplified, String content
+ String title, String content, InformationTypeEnum informationType, bool isSimplified
 });
 
 
@@ -62,13 +62,13 @@ class _$InformationDTOCopyWithImpl<$Res>
 
 /// Create a copy of InformationDTO
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? informationType = null,Object? isSimplified = null,Object? content = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? content = null,Object? informationType = null,Object? isSimplified = null,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
 as String,informationType: null == informationType ? _self.informationType : informationType // ignore: cast_nullable_to_non_nullable
 as InformationTypeEnum,isSimplified: null == isSimplified ? _self.isSimplified : isSimplified // ignore: cast_nullable_to_non_nullable
-as bool,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,
+as bool,
   ));
 }
 
@@ -153,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  InformationTypeEnum informationType,  bool isSimplified,  String content)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InformationDTO() when $default != null:
-return $default(_that.title,_that.informationType,_that.isSimplified,_that.content);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified);case _:
   return orElse();
 
 }
@@ -174,10 +174,10 @@ return $default(_that.title,_that.informationType,_that.isSimplified,_that.conte
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  InformationTypeEnum informationType,  bool isSimplified,  String content)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified)  $default,) {final _that = this;
 switch (_that) {
 case _InformationDTO():
-return $default(_that.title,_that.informationType,_that.isSimplified,_that.content);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +194,10 @@ return $default(_that.title,_that.informationType,_that.isSimplified,_that.conte
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  InformationTypeEnum informationType,  bool isSimplified,  String content)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified)?  $default,) {final _that = this;
 switch (_that) {
 case _InformationDTO() when $default != null:
-return $default(_that.title,_that.informationType,_that.isSimplified,_that.content);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified);case _:
   return null;
 
 }
@@ -209,13 +209,13 @@ return $default(_that.title,_that.informationType,_that.isSimplified,_that.conte
 
 
 class _InformationDTO implements InformationDTO {
-  const _InformationDTO({required this.title, required this.informationType, required this.isSimplified, required this.content});
+  const _InformationDTO({required this.title, required this.content, required this.informationType, required this.isSimplified});
   
 
 @override final  String title;
+@override final  String content;
 @override final  InformationTypeEnum informationType;
 @override final  bool isSimplified;
-@override final  String content;
 
 /// Create a copy of InformationDTO
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +227,16 @@ _$InformationDTOCopyWith<_InformationDTO> get copyWith => __$InformationDTOCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InformationDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified)&&(identical(other.content, content) || other.content == content));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InformationDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,informationType,isSimplified,content);
+int get hashCode => Object.hash(runtimeType,title,content,informationType,isSimplified);
 
 @override
 String toString() {
-  return 'InformationDTO(title: $title, informationType: $informationType, isSimplified: $isSimplified, content: $content)';
+  return 'InformationDTO(title: $title, content: $content, informationType: $informationType, isSimplified: $isSimplified)';
 }
 
 
@@ -247,7 +247,7 @@ abstract mixin class _$InformationDTOCopyWith<$Res> implements $InformationDTOCo
   factory _$InformationDTOCopyWith(_InformationDTO value, $Res Function(_InformationDTO) _then) = __$InformationDTOCopyWithImpl;
 @override @useResult
 $Res call({
- String title, InformationTypeEnum informationType, bool isSimplified, String content
+ String title, String content, InformationTypeEnum informationType, bool isSimplified
 });
 
 
@@ -264,13 +264,13 @@ class __$InformationDTOCopyWithImpl<$Res>
 
 /// Create a copy of InformationDTO
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? informationType = null,Object? isSimplified = null,Object? content = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? content = null,Object? informationType = null,Object? isSimplified = null,}) {
   return _then(_InformationDTO(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
 as String,informationType: null == informationType ? _self.informationType : informationType // ignore: cast_nullable_to_non_nullable
 as InformationTypeEnum,isSimplified: null == isSimplified ? _self.isSimplified : isSimplified // ignore: cast_nullable_to_non_nullable
-as bool,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,
+as bool,
   ));
 }
 

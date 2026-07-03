@@ -18,6 +18,9 @@ class GlosseumIcons {
   static const GlosseumIconData back =
   GlosseumIconData('${_basePath}arrow_left.svg');
 
+  static const GlosseumIconData send =
+  GlosseumIconData('${_basePath}arrow_right.svg');
+
   static const GlosseumIconData settings =
   GlosseumIconData('${_basePath}settings.svg');
 

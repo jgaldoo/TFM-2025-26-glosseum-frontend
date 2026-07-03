@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Information {
 
- String get title; String get content; String get status;
+ String get title; String get content; InformationTypeEnum get informationType; bool get isSimplified; List<String> get userQuestions; List<String> get appAnswers;
 /// Create a copy of Information
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $InformationCopyWith<Information> get copyWith => _$InformationCopyWithImpl<Info
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Information&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Information&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified)&&const DeepCollectionEquality().equals(other.userQuestions, userQuestions)&&const DeepCollectionEquality().equals(other.appAnswers, appAnswers));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,content,status);
+int get hashCode => Object.hash(runtimeType,title,content,informationType,isSimplified,const DeepCollectionEquality().hash(userQuestions),const DeepCollectionEquality().hash(appAnswers));
 
 @override
 String toString() {
-  return 'Information(title: $title, content: $content, status: $status)';
+  return 'Information(title: $title, content: $content, informationType: $informationType, isSimplified: $isSimplified, userQuestions: $userQuestions, appAnswers: $appAnswers)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $InformationCopyWith<$Res>  {
   factory $InformationCopyWith(Information value, $Res Function(Information) _then) = _$InformationCopyWithImpl;
 @useResult
 $Res call({
- String title, String content, String status
+ String title, String content, InformationTypeEnum informationType, bool isSimplified, List<String> userQuestions, List<String> appAnswers
 });
 
 
@@ -65,12 +65,15 @@ class _$InformationCopyWithImpl<$Res>
 
 /// Create a copy of Information
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? content = null,Object? status = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? content = null,Object? informationType = null,Object? isSimplified = null,Object? userQuestions = null,Object? appAnswers = null,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,
+as String,informationType: null == informationType ? _self.informationType : informationType // ignore: cast_nullable_to_non_nullable
+as InformationTypeEnum,isSimplified: null == isSimplified ? _self.isSimplified : isSimplified // ignore: cast_nullable_to_non_nullable
+as bool,userQuestions: null == userQuestions ? _self.userQuestions : userQuestions // ignore: cast_nullable_to_non_nullable
+as List<String>,appAnswers: null == appAnswers ? _self.appAnswers : appAnswers // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -155,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String content,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified,  List<String> userQuestions,  List<String> appAnswers)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Information() when $default != null:
-return $default(_that.title,_that.content,_that.status);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified,_that.userQuestions,_that.appAnswers);case _:
   return orElse();
 
 }
@@ -176,10 +179,10 @@ return $default(_that.title,_that.content,_that.status);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String content,  String status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified,  List<String> userQuestions,  List<String> appAnswers)  $default,) {final _that = this;
 switch (_that) {
 case _Information():
-return $default(_that.title,_that.content,_that.status);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified,_that.userQuestions,_that.appAnswers);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +199,10 @@ return $default(_that.title,_that.content,_that.status);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String content,  String status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified,  List<String> userQuestions,  List<String> appAnswers)?  $default,) {final _that = this;
 switch (_that) {
 case _Information() when $default != null:
-return $default(_that.title,_that.content,_that.status);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified,_that.userQuestions,_that.appAnswers);case _:
   return null;
 
 }
@@ -211,12 +214,27 @@ return $default(_that.title,_that.content,_that.status);case _:
 @JsonSerializable()
 
 class _Information implements Information {
-  const _Information({required this.title, required this.content, required this.status});
+  const _Information({required this.title, required this.content, required this.informationType, required this.isSimplified, final  List<String> userQuestions = const [], final  List<String> appAnswers = const []}): _userQuestions = userQuestions,_appAnswers = appAnswers;
   factory _Information.fromJson(Map<String, dynamic> json) => _$InformationFromJson(json);
 
 @override final  String title;
 @override final  String content;
-@override final  String status;
+@override final  InformationTypeEnum informationType;
+@override final  bool isSimplified;
+ final  List<String> _userQuestions;
+@override@JsonKey() List<String> get userQuestions {
+  if (_userQuestions is EqualUnmodifiableListView) return _userQuestions;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_userQuestions);
+}
+
+ final  List<String> _appAnswers;
+@override@JsonKey() List<String> get appAnswers {
+  if (_appAnswers is EqualUnmodifiableListView) return _appAnswers;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_appAnswers);
+}
+
 
 /// Create a copy of Information
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Information&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Information&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified)&&const DeepCollectionEquality().equals(other._userQuestions, _userQuestions)&&const DeepCollectionEquality().equals(other._appAnswers, _appAnswers));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,content,status);
+int get hashCode => Object.hash(runtimeType,title,content,informationType,isSimplified,const DeepCollectionEquality().hash(_userQuestions),const DeepCollectionEquality().hash(_appAnswers));
 
 @override
 String toString() {
-  return 'Information(title: $title, content: $content, status: $status)';
+  return 'Information(title: $title, content: $content, informationType: $informationType, isSimplified: $isSimplified, userQuestions: $userQuestions, appAnswers: $appAnswers)';
 }
 
 
@@ -251,7 +269,7 @@ abstract mixin class _$InformationCopyWith<$Res> implements $InformationCopyWith
   factory _$InformationCopyWith(_Information value, $Res Function(_Information) _then) = __$InformationCopyWithImpl;
 @override @useResult
 $Res call({
- String title, String content, String status
+ String title, String content, InformationTypeEnum informationType, bool isSimplified, List<String> userQuestions, List<String> appAnswers
 });
 
 
@@ -268,12 +286,15 @@ class __$InformationCopyWithImpl<$Res>
 
 /// Create a copy of Information
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? content = null,Object? status = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? content = null,Object? informationType = null,Object? isSimplified = null,Object? userQuestions = null,Object? appAnswers = null,}) {
   return _then(_Information(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,
+as String,informationType: null == informationType ? _self.informationType : informationType // ignore: cast_nullable_to_non_nullable
+as InformationTypeEnum,isSimplified: null == isSimplified ? _self.isSimplified : isSimplified // ignore: cast_nullable_to_non_nullable
+as bool,userQuestions: null == userQuestions ? _self._userQuestions : userQuestions // ignore: cast_nullable_to_non_nullable
+as List<String>,appAnswers: null == appAnswers ? _self._appAnswers : appAnswers // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

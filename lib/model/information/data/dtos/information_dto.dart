@@ -7,8 +7,8 @@ part 'information_dto.freezed.dart';
 abstract class InformationDTO with _$InformationDTO {
   const factory InformationDTO({
     required String title,
+    required String content,
     required InformationTypeEnum informationType,
     required bool isSimplified,
-    required String content,
   }) = _InformationDTO;
 }
