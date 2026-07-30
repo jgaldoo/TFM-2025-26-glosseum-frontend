@@ -3,12 +3,17 @@ import 'package:glosseum_frontend/model/information/data/information_type_enum.d
 
 part 'information_dto.freezed.dart';
 
+part 'information_dto.g.dart';
+
 @freezed
 abstract class InformationDTO with _$InformationDTO {
   const factory InformationDTO({
     required String title,
+    required String content,
     required InformationTypeEnum informationType,
     required bool isSimplified,
-    required String content,
   }) = _InformationDTO;
+
+  factory InformationDTO.fromJson(Map<String, dynamic> json) =>
+      _$InformationDTOFromJson(json);
 }

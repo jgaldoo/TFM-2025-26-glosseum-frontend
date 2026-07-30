@@ -38,14 +38,17 @@ flutter:
   uses-material-design: true
   assets:
     - 'assets/icons/arrow_left.svg'
+    - 'assets/icons/arrow_right.svg'
     - 'assets/icons/camera.svg'
     - 'assets/icons/check.svg'
     - 'assets/icons/cross.svg'
     - 'assets/icons/error_icon.svg'
     - 'assets/icons/identify_icon.svg'
     - 'assets/icons/image_to_text_icon.svg'
+    - 'assets/icons/minus.svg'
     - 'assets/icons/moon.svg'
     - 'assets/icons/museum_logo.svg'
+    - 'assets/icons/plus.svg'
     - 'assets/icons/qr_icon.svg'
     - 'assets/icons/qr_scan_icon.svg'
     - 'assets/icons/search.svg'

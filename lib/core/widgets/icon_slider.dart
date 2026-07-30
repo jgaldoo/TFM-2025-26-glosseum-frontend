@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/extensions/glosseum_camera_interface_theme.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon_data.dart';
 
@@ -38,12 +38,7 @@ class IconSlider extends StatelessWidget {
       ),
       RotatedBox(
         quarterTurns: isVertical ? -1 : 0,
-        child: Slider(
-          value: value,
-          min: min,
-          max: max,
-          onChanged: onChanged,
-        ),
+        child: Slider(value: value, min: min, max: max, onChanged: onChanged),
       ),
       GlosseumIcon(
         isVertical ? lowerValueIcon : higherValueIcon,
@@ -52,13 +47,6 @@ class IconSlider extends StatelessWidget {
       ),
     ];
 
-    return (isVertical
-        ? Column(
-            children: content,
-          )
-        : Row(
-            children: content,
-          )
-    );
+    return (isVertical ? Column(children: content) : Row(children: content));
   }
 }

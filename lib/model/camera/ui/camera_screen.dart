@@ -4,36 +4,33 @@ import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/camera_control_notifier.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
-import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_nav_entry.dart';
-import 'package:glosseum_frontend/core/widgets/bottom_navbar/bottom_navbar.dart';
-import 'package:glosseum_frontend/core/widgets/error_grabbable_panel.dart';
+import 'package:glosseum_frontend/core/widgets/navbar/nav_entry.dart';
+import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
+import 'package:glosseum_frontend/core/widgets/grabbable_panel/error_grabbable_panel.dart';
 import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
 import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
 import 'package:glosseum_frontend/model/camera/ui/camera_control_bar.dart';
 import 'package:glosseum_frontend/model/camera/ui/camera_gesture_layer.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
+import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/photo/data/dtos/photo_dto.dart';
 import 'package:glosseum_frontend/model/photo/data/photo_api_provider.dart';
 import 'package:glosseum_frontend/model/photo/data/photo_attributes_notifier.dart';
 import 'package:glosseum_frontend/model/photo/ui/photo_preview.dart';
 import 'package:glosseum_frontend/model/qr/ui/qr_overlay.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:glosseum_frontend/core/widgets/image_side_menu.dart';
 
-
 class CameraScreen extends ConsumerStatefulWidget {
   final CameraModeEnum cameraMode;
 
-  const CameraScreen({
-    super.key,
-    required this.cameraMode
-  });
+  const CameraScreen({super.key, required this.cameraMode});
 
   @override
   ConsumerState<CameraScreen> createState() => _CameraScreenState();
-
 }
 
 class _CameraScreenState extends ConsumerState<CameraScreen>
@@ -42,6 +39,89 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   late CameraModeEnum _lastCameraMode;
   bool _cameraPaused = false;
   bool _isLoading = false;
+
+  void _transcribe(BuildContext context, WidgetRef ref) async {
+    final state = ref.watch(cameraProvider);
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final ApiResult<InformationDTO> transcribeResult = await ref
+        .read(photoAPIProvider.notifier)
+        .transcribe(
+          state.pictureTaken != null
+              ? PhotoDTO(
+                  fileBytes: await state.pictureTaken!.readAsBytes(),
+                  fileName: state.pictureTaken!.name,
+                )
+              : PhotoDTO(),
+        );
+
+    // Ensure the widget exists before trying to do
+    // further operations
+    if (!context.mounted) return;
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    transcribeResult.when(
+      success: (infoDTO, statusCode, message) {
+        context.push('/information', extra: Information.fromDTO(infoDTO));
+      },
+      error: (errorType, statusCode, message) {
+        showModalBottomSheet(
+          context: context,
+          enableDrag: false,
+          isScrollControlled: true,
+          builder: (_) {
+            return ErrorGrabbablePanel(
+              statusCode: statusCode,
+              message: message,
+            );
+          },
+        );
+      },
+    );
+
+    // context.push(AppScreenEnum.information, info)
+  }
+
+  void _reloadLastCameraMode(WidgetRef ref) {
+    setState(() {
+      _cameraMode = _lastCameraMode;
+    });
+  }
+
+  Widget? _screenBottomNavbar() {
+    return _cameraMode == CameraModeEnum.photo
+        ? BottomNavbar(
+            entries: [
+              NavEntry(
+                icon: GlosseumIcons.back,
+                label: 'Atrás',
+                onTap: (context, ref) async => {_reloadLastCameraMode(ref)},
+              ),
+              NavEntry(
+                icon: GlosseumIcons.identify,
+                label: 'Identificar',
+                onTap: (context, ref) async => {
+                  // await petición a API
+                  // context.push(AppScreenEnum.information, info)
+                },
+              ),
+              NavEntry(
+                icon: GlosseumIcons.transcribe,
+                label: 'Transcribir',
+                onTap: (context, ref) async {
+                  _transcribe(context, ref);
+                },
+              ),
+            ],
+          )
+        : SizedBox.shrink();
+  }
 
   void _toggleMode() {
     // Ensure changes only happen between camera and qrScanner modes
@@ -97,27 +177,29 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     if (!state.permissionGranted) {
       return Scaffold(
         body: Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Camera permission not granted'),
-                ElevatedButton(onPressed: () {
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Camera permission not granted'),
+              ElevatedButton(
+                onPressed: () {
                   openAppSettings();
-                }, child: const Text('Go to Settings')),
-              ],
-            )),
+                },
+                child: const Text('Go to Settings'),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
     if (!state.isInitialized) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    ApiResult<InformationDTO> transcribeResult;
     return LoadingBlurOverlay(
       isLoading: _isLoading,
+      useBlur: true,
       child: Scaffold(
         body: Stack(
           fit: StackFit.expand,
@@ -145,23 +227,22 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
                   // CameraModeEnum.photo
                   state.controller != null && state.pictureTaken != null
                       ? SizedBox.expand(
-                    child: PhotoPreview(
-                      imagePath: state.pictureTaken!.path,
-                    ),
-                  )
+                          child: PhotoPreview(
+                            imagePath: state.pictureTaken!.path,
+                          ),
+                        )
                       : const SizedBox.shrink(),
                 ],
               ),
             ),
-
 
             SafeArea(
               child: Align(
                 alignment: Alignment(1, 0.5),
                 child: ImageSideMenu(
                   imageAttributeInterface: _cameraMode == CameraModeEnum.photo
-                    ? ref.watch(photoAttributesProvider.notifier)
-                    : ref.watch(cameraAttributesProvider.notifier),
+                      ? ref.watch(photoAttributesProvider.notifier)
+                      : ref.watch(cameraAttributesProvider.notifier),
                 ),
               ),
             ),
@@ -183,80 +264,11 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
                       });
                     }),
                   ),
-                )
+                ),
               ),
           ],
         ),
-        bottomNavigationBar: _cameraMode == CameraModeEnum.photo
-        ? BottomNavbar(
-            entries: [
-              BottomNavEntry(
-                icon: GlosseumIcons.back,
-                label: 'Atrás',
-                onTap: () async => {
-                  setState(() {
-                    _cameraMode = _lastCameraMode;
-                  })
-                },
-              ),
-              BottomNavEntry(
-                icon: GlosseumIcons.identify,
-                label: 'Identificar',
-                onTap: () async => {
-                  // await petición a API
-                  // context.push(AppScreenEnum.information, info)
-                },
-              ),
-              BottomNavEntry(
-                icon: GlosseumIcons.transcribe,
-                label: 'Transcribir',
-                onTap: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-
-                  transcribeResult = await ref.read(photoAPIProvider.notifier)
-                      .transcribe(
-                        state.pictureTaken != null
-                        ? PhotoDTO(
-                            fileBytes: await state.pictureTaken!.readAsBytes(),
-                            fileName: state.pictureTaken!.name
-                        )
-                        : PhotoDTO(),
-                  );
-
-                  // Ensure the widget exists before trying to do
-                  // further operations
-                  if (!context.mounted) return;
-
-                  setState(() {
-                    _isLoading = false;
-                  });
-
-                  transcribeResult.when(
-                    success: (infoDTO, statusCode, message) {
-                      // TODO: Show received information
-                    },
-                    error: (errorType, statusCode, message) {
-                      showModalBottomSheet(
-                          context: context,
-                          enableDrag: false,
-                          isScrollControlled: true,
-                          builder: (_) {
-                            return ErrorGrabbablePanel(
-                              statusCode: statusCode,
-                              message: message,
-                            );
-                          });
-                    }
-                  );
-
-                  // context.push(AppScreenEnum.information, info)
-                },
-              ),
-            ],
-          )
-        : SizedBox.shrink(),
+        bottomNavigationBar: _screenBottomNavbar(),
       ),
     );
   }

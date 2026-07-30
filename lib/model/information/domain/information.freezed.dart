@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Information {
 
- String get title; String get content; String get status;
+ String get title; String get content; InformationTypeEnum get informationType; bool get isSimplified; List<ChatTurn> get chatTurns;
 /// Create a copy of Information
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $InformationCopyWith<Information> get copyWith => _$InformationCopyWithImpl<Info
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Information&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Information&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified)&&const DeepCollectionEquality().equals(other.chatTurns, chatTurns));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,content,status);
+int get hashCode => Object.hash(runtimeType,title,content,informationType,isSimplified,const DeepCollectionEquality().hash(chatTurns));
 
 @override
 String toString() {
-  return 'Information(title: $title, content: $content, status: $status)';
+  return 'Information(title: $title, content: $content, informationType: $informationType, isSimplified: $isSimplified, chatTurns: $chatTurns)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $InformationCopyWith<$Res>  {
   factory $InformationCopyWith(Information value, $Res Function(Information) _then) = _$InformationCopyWithImpl;
 @useResult
 $Res call({
- String title, String content, String status
+ String title, String content, InformationTypeEnum informationType, bool isSimplified, List<ChatTurn> chatTurns
 });
 
 
@@ -65,12 +65,14 @@ class _$InformationCopyWithImpl<$Res>
 
 /// Create a copy of Information
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? content = null,Object? status = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? content = null,Object? informationType = null,Object? isSimplified = null,Object? chatTurns = null,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,
+as String,informationType: null == informationType ? _self.informationType : informationType // ignore: cast_nullable_to_non_nullable
+as InformationTypeEnum,isSimplified: null == isSimplified ? _self.isSimplified : isSimplified // ignore: cast_nullable_to_non_nullable
+as bool,chatTurns: null == chatTurns ? _self.chatTurns : chatTurns // ignore: cast_nullable_to_non_nullable
+as List<ChatTurn>,
   ));
 }
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String content,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified,  List<ChatTurn> chatTurns)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Information() when $default != null:
-return $default(_that.title,_that.content,_that.status);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified,_that.chatTurns);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.title,_that.content,_that.status);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String content,  String status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified,  List<ChatTurn> chatTurns)  $default,) {final _that = this;
 switch (_that) {
 case _Information():
-return $default(_that.title,_that.content,_that.status);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified,_that.chatTurns);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.title,_that.content,_that.status);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String content,  String status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String content,  InformationTypeEnum informationType,  bool isSimplified,  List<ChatTurn> chatTurns)?  $default,) {final _that = this;
 switch (_that) {
 case _Information() when $default != null:
-return $default(_that.title,_that.content,_that.status);case _:
+return $default(_that.title,_that.content,_that.informationType,_that.isSimplified,_that.chatTurns);case _:
   return null;
 
 }
@@ -211,12 +213,20 @@ return $default(_that.title,_that.content,_that.status);case _:
 @JsonSerializable()
 
 class _Information implements Information {
-  const _Information({required this.title, required this.content, required this.status});
+  const _Information({required this.title, required this.content, required this.informationType, required this.isSimplified, final  List<ChatTurn> chatTurns = const []}): _chatTurns = chatTurns;
   factory _Information.fromJson(Map<String, dynamic> json) => _$InformationFromJson(json);
 
 @override final  String title;
 @override final  String content;
-@override final  String status;
+@override final  InformationTypeEnum informationType;
+@override final  bool isSimplified;
+ final  List<ChatTurn> _chatTurns;
+@override@JsonKey() List<ChatTurn> get chatTurns {
+  if (_chatTurns is EqualUnmodifiableListView) return _chatTurns;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_chatTurns);
+}
+
 
 /// Create a copy of Information
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Information&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.status, status) || other.status == status));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Information&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified)&&const DeepCollectionEquality().equals(other._chatTurns, _chatTurns));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,content,status);
+int get hashCode => Object.hash(runtimeType,title,content,informationType,isSimplified,const DeepCollectionEquality().hash(_chatTurns));
 
 @override
 String toString() {
-  return 'Information(title: $title, content: $content, status: $status)';
+  return 'Information(title: $title, content: $content, informationType: $informationType, isSimplified: $isSimplified, chatTurns: $chatTurns)';
 }
 
 
@@ -251,7 +261,7 @@ abstract mixin class _$InformationCopyWith<$Res> implements $InformationCopyWith
   factory _$InformationCopyWith(_Information value, $Res Function(_Information) _then) = __$InformationCopyWithImpl;
 @override @useResult
 $Res call({
- String title, String content, String status
+ String title, String content, InformationTypeEnum informationType, bool isSimplified, List<ChatTurn> chatTurns
 });
 
 
@@ -268,12 +278,14 @@ class __$InformationCopyWithImpl<$Res>
 
 /// Create a copy of Information
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? content = null,Object? status = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? content = null,Object? informationType = null,Object? isSimplified = null,Object? chatTurns = null,}) {
   return _then(_Information(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,content: null == content ? _self.content : content // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,
+as String,informationType: null == informationType ? _self.informationType : informationType // ignore: cast_nullable_to_non_nullable
+as InformationTypeEnum,isSimplified: null == isSimplified ? _self.isSimplified : isSimplified // ignore: cast_nullable_to_non_nullable
+as bool,chatTurns: null == chatTurns ? _self._chatTurns : chatTurns // ignore: cast_nullable_to_non_nullable
+as List<ChatTurn>,
   ));
 }
 

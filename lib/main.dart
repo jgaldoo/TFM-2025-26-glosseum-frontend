@@ -7,14 +7,11 @@ import 'package:glosseum_frontend/core/theme/glosseum_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(
-      child: MainApp(),
-  ));
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends ConsumerWidget {
   const MainApp({super.key});
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

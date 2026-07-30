@@ -27,14 +27,15 @@ class NetworkService {
   }
 
   Future<ApiResult<T>> safeRequest<T>(
-      Future<Response> Function() call,
-      ) async {
+    Future<Response> Function() call,
+    T Function(Map<String, dynamic>) fromJson,
+  ) async {
     try {
       await checkStatus();
       final response = await call();
 
       return ApiResult.success(
-        data: response.data as T,
+        data: fromJson(response.data),
         statusCode: response.statusCode ?? 200,
         message: response.statusMessage ?? 'OK',
       );

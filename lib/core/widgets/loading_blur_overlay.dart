@@ -1,15 +1,16 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoadingBlurOverlay extends StatelessWidget {
   final bool isLoading;
+  final bool useBlur;
   final Widget child;
 
   const LoadingBlurOverlay({
     super.key,
     required this.isLoading,
+    required this.useBlur,
     required this.child
   });
 

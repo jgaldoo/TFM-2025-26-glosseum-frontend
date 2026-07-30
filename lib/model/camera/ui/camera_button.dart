@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/extensions/glosseum_camera_interface_theme.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon_data.dart';
 
@@ -14,7 +14,7 @@ class CameraButton extends StatefulWidget {
     required this.onPressed,
     required this.icon,
     this.primary = true,
-    this.size = 56
+    this.size = 56,
   });
 
   @override
@@ -23,7 +23,6 @@ class CameraButton extends StatefulWidget {
 
 class _CameraButtonState extends State<CameraButton>
     with SingleTickerProviderStateMixin {
-
   late AnimationController _controller;
 
   @override
@@ -66,14 +65,11 @@ class _CameraButtonState extends State<CameraButton>
             height: widget.size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: borderColor,
-                width: widget.size*0.1,
-              ),
+              border: Border.all(color: borderColor, width: widget.size * 0.1),
             ),
             child: Container(
-              width: widget.size*0.8,
-              height: widget.size*0.8,
+              width: widget.size * 0.8,
+              height: widget.size * 0.8,
               decoration: BoxDecoration(
                 color: background,
                 shape: BoxShape.circle,
@@ -82,7 +78,7 @@ class _CameraButtonState extends State<CameraButton>
                 child: GlosseumIcon(
                   widget.icon,
                   color: iconColor,
-                  size: widget.size*0.5
+                  size: widget.size * 0.5,
                 ),
               ),
             ),
