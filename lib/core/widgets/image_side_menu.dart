@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/models/image_attribute_interface.dart';
-import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/extensions/glosseum_camera_interface_theme.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/widgets/icon_slider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ImageSideMenu extends ConsumerWidget{
+class ImageSideMenu extends ConsumerWidget {
   final ImageAttributeInterface imageAttributeInterface;
 
-  const ImageSideMenu({
-    super.key,
-    required this.imageAttributeInterface,
-  });
+  const ImageSideMenu({super.key, required this.imageAttributeInterface});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,7 +17,6 @@ class ImageSideMenu extends ConsumerWidget{
 
     final double containerWidth = 140;
     const double closingOffset = 0.75;
-
 
     return AnimatedSlide(
       duration: const Duration(milliseconds: 250),
@@ -40,8 +36,8 @@ class ImageSideMenu extends ConsumerWidget{
             AnimatedAlign(
               duration: const Duration(milliseconds: 250),
               alignment: attributes.menuOpen
-                ? Alignment.centerLeft
-                : Alignment.center,
+                  ? Alignment.centerLeft
+                  : Alignment.center,
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () => imageAttributeInterface.toggleMenu(),
@@ -76,10 +72,9 @@ class ImageSideMenu extends ConsumerWidget{
                     value: attributes.zoom,
                     min: attributes.minZoom,
                     max: attributes.maxZoom,
-                    onChanged: (v) =>
-                        Future.microtask(() {
-                          imageAttributeInterface.setZoom(v);
-                        }),
+                    onChanged: (v) => Future.microtask(() {
+                      imageAttributeInterface.setZoom(v);
+                    }),
                   ),
                 ],
               ),
@@ -97,10 +92,9 @@ class ImageSideMenu extends ConsumerWidget{
                     value: attributes.brightness,
                     min: attributes.minBrightness,
                     max: attributes.maxBrightness,
-                    onChanged: (v) =>
-                        Future.microtask(() {
-                          imageAttributeInterface.setBrightness(v);
-                        }),
+                    onChanged: (v) => Future.microtask(() {
+                      imageAttributeInterface.setBrightness(v);
+                    }),
                   ),
                 ],
               ),

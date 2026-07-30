@@ -5,7 +5,14 @@ import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class InformationControls extends ConsumerStatefulWidget {
-  const InformationControls({super.key});
+  final Function(String question) askQuestion;
+  final bool isAnswerLoading;
+
+  const InformationControls({
+    super.key,
+    required this.askQuestion,
+    required this.isAnswerLoading,
+  });
 
   @override
   ConsumerState<InformationControls> createState() =>
@@ -21,60 +28,100 @@ class _InformationControlsState extends ConsumerState<InformationControls> {
     );
 
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  // TODO: Send to backend to simplify
-                },
-                child: Text('Simplificar'),
+      color: theme.scaffoldBackgroundColor,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Divider(),
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      // TODO: Send to backend to simplify
+                    },
+                    style: theme.textButtonTheme.style,
+                    child: Text('Simplificar'),
+                  ),
+                ],
               ),
+            ),
+            TextField(
+              controller: textControlNotifier.controller,
+              style: theme.textTheme.bodyMedium,
+              decoration: InputDecoration(
+                isDense: true,
+                suffixIcon: ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: textControlNotifier.controller,
+                  builder: (context, value, child) {
+                    final canSend =
+                        !widget.isAnswerLoading && value.text.trim().isNotEmpty;
 
-              TextButton(
-                onPressed: () {
-                  // TODO: Open more options
-                },
-                child: Text('Más opciones'),
-              ),
-            ],
-          ),
-
-          TextField(
-            controller: textControlNotifier.controller,
-            decoration: InputDecoration(
-              suffix: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    // TODO: Send to backend to process
+                    return AbsorbPointer(
+                      absorbing: !canSend,
+                      child: IconButton(
+                        onPressed: canSend
+                            ? () {
+                                widget.askQuestion(value.text);
+                                textControlNotifier.controller.clear();
+                              }
+                            : null,
+                        icon: GlosseumIcon(
+                          GlosseumIcons.send,
+                          color: theme.primaryColor,
+                          size: 44,
+                        ),
+                      ),
+                    );
                   },
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: GlosseumIcon(GlosseumIcons.send),
+                ),
+                hintText: 'Escribe una pregunta',
+                hintStyle: theme.textTheme.labelLarge?.copyWith(
+                  color: theme.hintColor,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.primary,
+                    width: 1,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(
+                    color: theme.colorScheme.secondary,
+                    width: 2,
                   ),
                 ),
               ),
-              hintText: 'Pregunta lo que quieras',
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: theme.colorScheme.secondary,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: theme.colorScheme.primary,
-                  width: 2,
-                ),
-              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+/**
+ * Material(
+    color: Colors.transparent,
+    child: InkWell(
+    onTap: () {
+    widget.askQuestion(textControlNotifier.controller.text);
+    textControlNotifier.controller.clear();
+    },
+    child: Padding(
+    padding: EdgeInsets.all(5),
+    child: GlosseumIcon(
+    GlosseumIcons.send,
+    color: theme.primaryColor,
+    ),
+    ),
+    ),
+    ),
+ */

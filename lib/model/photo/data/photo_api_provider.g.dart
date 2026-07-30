@@ -32,7 +32,7 @@ final class PhotoAPIProvider extends $AsyncNotifierProvider<PhotoAPI, void> {
   PhotoAPI create() => PhotoAPI();
 }
 
-String _$photoAPIHash() => r'6a6d78843d32528d20c789648d080ea7c7e154e6';
+String _$photoAPIHash() => r'98915890c096a9c9bf2079a4d222a68cdb056002';
 
 abstract class _$PhotoAPI extends $AsyncNotifier<void> {
   FutureOr<void> build();

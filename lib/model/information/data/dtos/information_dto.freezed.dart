@@ -11,6 +11,7 @@ part of 'information_dto.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$InformationDTO {
 
@@ -21,6 +22,8 @@ mixin _$InformationDTO {
 @pragma('vm:prefer-inline')
 $InformationDTOCopyWith<InformationDTO> get copyWith => _$InformationDTOCopyWithImpl<InformationDTO>(this as InformationDTO, _$identity);
 
+  /// Serializes this InformationDTO to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -28,7 +31,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is InformationDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,title,content,informationType,isSimplified);
 
@@ -206,11 +209,11 @@ return $default(_that.title,_that.content,_that.informationType,_that.isSimplifi
 }
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _InformationDTO implements InformationDTO {
   const _InformationDTO({required this.title, required this.content, required this.informationType, required this.isSimplified});
-  
+  factory _InformationDTO.fromJson(Map<String, dynamic> json) => _$InformationDTOFromJson(json);
 
 @override final  String title;
 @override final  String content;
@@ -223,14 +226,17 @@ class _InformationDTO implements InformationDTO {
 @pragma('vm:prefer-inline')
 _$InformationDTOCopyWith<_InformationDTO> get copyWith => __$InformationDTOCopyWithImpl<_InformationDTO>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$InformationDTOToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _InformationDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.content, content) || other.content == content)&&(identical(other.informationType, informationType) || other.informationType == informationType)&&(identical(other.isSimplified, isSimplified) || other.isSimplified == isSimplified));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,title,content,informationType,isSimplified);
 

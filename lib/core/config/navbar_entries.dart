@@ -30,7 +30,8 @@ final mainBottomNavbarEntries = [
   NavEntry(
     icon: GlosseumIcons.qr_code_scanner,
     label: 'Escanear QR',
-    onTap: (context, _) => context.push(AppScreenEnum.qrScanner.route),
+    onTap: (context, _) =>
+        context.push('/information/dummy'), //AppScreenEnum.qrScanner.route),
   ),
   NavEntry(
     icon: GlosseumIcons.camera,

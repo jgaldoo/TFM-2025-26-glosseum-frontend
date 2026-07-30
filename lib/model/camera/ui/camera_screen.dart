@@ -6,17 +6,19 @@ import 'package:glosseum_frontend/core/providers/camera_control_notifier.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/nav_entry.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
-import 'package:glosseum_frontend/core/widgets/error_grabbable_panel.dart';
+import 'package:glosseum_frontend/core/widgets/grabbable_panel/error_grabbable_panel.dart';
 import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
 import 'package:glosseum_frontend/model/camera/data/camera_attributes_notifier.dart';
 import 'package:glosseum_frontend/model/camera/ui/camera_control_bar.dart';
 import 'package:glosseum_frontend/model/camera/ui/camera_gesture_layer.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
+import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/photo/data/dtos/photo_dto.dart';
 import 'package:glosseum_frontend/model/photo/data/photo_api_provider.dart';
 import 'package:glosseum_frontend/model/photo/data/photo_attributes_notifier.dart';
 import 'package:glosseum_frontend/model/photo/ui/photo_preview.dart';
 import 'package:glosseum_frontend/model/qr/ui/qr_overlay.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -38,7 +40,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   bool _cameraPaused = false;
   bool _isLoading = false;
 
-  void _transcribe(context, ref) async {
+  void _transcribe(BuildContext context, WidgetRef ref) async {
     final state = ref.watch(cameraProvider);
 
     setState(() {
@@ -66,7 +68,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
 
     transcribeResult.when(
       success: (infoDTO, statusCode, message) {
-        context.push('/information', extra: infoDTO);
+        context.push('/information', extra: Information.fromDTO(infoDTO));
       },
       error: (errorType, statusCode, message) {
         showModalBottomSheet(
