@@ -1,5 +1,7 @@
 # Glosseum Frontend
-A Flutter with Riverpod application made to interact with [this backend](https://github.com/jgaldoo/TFM-2025-26-glosseum-backend)
+A Flutter with Riverpod application made to interact with [this backend](https://github.com/jgaldoo/TFM-2025-26-glosseum-backend).
+
+📖 This application was created as part of a Master's Thesis for the "Máster en Ingeniería Informática" of the "Universidad Complutense de Madrid".
 
 ⚠️ This application was exclusively made for mobile devices. Any deployment or emulation in Windows, MacOs, Linux, Web or other platforms is not guaranteed to function properly.
 
@@ -21,7 +23,7 @@ Thirdly, ensure you have an emulator or physical device ready to launch the app.
 
 Finally, download this project and open it on your IDE of preference.
 
-Download all dependencies:
+From the root of the project, download all dependencies:
 ```
 flutter pub get
 ```
@@ -33,8 +35,16 @@ dart run build_runner build
 
 Run the ``main.dart`` file, either by CLI or by IDE.
 ```
-flutter run main.dart
+flutter run ./lib/main.dart <device_id>
 ```
 
-And that should do!
+You can find out your device_id by running
+```
+flutter devices
+```
 
+That's it!
+
+## Disclaimers
+
+Some of the icons used in this app are works used as‑is, combined, or modified from the [Simple Design System](https://www.figma.com/community/file/1380235722331273046/simple-design-system) published on the Figma Community, licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/).
