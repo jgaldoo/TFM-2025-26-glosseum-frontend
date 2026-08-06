@@ -52,7 +52,7 @@ class TrackScrollbar extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(
                 0,
                 0,
-                (usedThickness - usedTrackThickness) / 2,
+                (usedThickness - usedTrackThickness) * 0.5,
                 0,
               ),
               child: Container(
@@ -60,7 +60,7 @@ class TrackScrollbar extends StatelessWidget {
                 height: double.infinity,
                 decoration: BoxDecoration(
                   color: usedTrackColor,
-                  borderRadius: BorderRadius.circular(usedTrackThickness / 2),
+                  borderRadius: BorderRadius.circular(usedTrackThickness * 0.5),
                 ),
               ),
             ),

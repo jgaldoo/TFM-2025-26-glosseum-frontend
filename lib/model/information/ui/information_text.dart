@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/widgets/track_scrollbar.dart';
+import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
 import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/information/ui/information_answer_container.dart';
@@ -20,6 +21,24 @@ class InformationText extends StatefulWidget {
 }
 
 class _InformationTextState extends State<InformationText> {
+  List<Widget> _buildChat(BuildContext context) {
+    final sessionHistory = widget.information.chatSession != null
+        ? widget.information.chatSession!.history
+        : [];
+
+    return sessionHistory.map((message) {
+      return message.role == ChatRoleEnum.user
+          ? Align(
+              alignment: Alignment.centerRight,
+              child: InformationQuestionContainer(question: message.content),
+            )
+          : Align(
+              alignment: Alignment.centerLeft,
+              child: InformationAnswerContainer(answer: message.content),
+            );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -29,95 +48,66 @@ class _InformationTextState extends State<InformationText> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-            child: Text(
-              informationTypeText(
-                widget.information.informationType,
-                widget.information.isSimplified,
-              ),
-              textAlign: TextAlign.right,
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: theme.hintColor,
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Text(
-              widget.information.title,
-              textAlign: TextAlign.left,
-              style: theme.textTheme.titleMedium,
-            ),
-          ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Divider(
-              height: 20,
-              thickness: 3,
-              indent: 0,
-              endIndent: 0,
-              color: theme.primaryColor,
-            ),
-          ),
-
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: EdgeInsets.symmetric(horizontal: 7.5),
               child: TrackScrollbar(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 22.5),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            child: Text(
+                              informationTypeText(
+                                widget.information.informationType,
+                                widget.information.isSimplified,
+                              ),
+                              textAlign: TextAlign.right,
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: theme.hintColor,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Text(
+                          widget.information.title,
+                          textAlign: TextAlign.left,
+                          style: theme.textTheme.titleMedium,
+                        ),
+
+                        Divider(
+                          height: 20,
+                          thickness: 3,
+                          indent: 0,
+                          endIndent: 0,
+                          color: theme.primaryColor,
+                        ),
+
                         Text(
                           widget.information.content,
                           style: theme.textTheme.bodyMedium,
                           textAlign: TextAlign.left,
                         ),
 
-                        for (
-                          var i = 0;
-                          i < widget.information.chatTurns.length;
-                          i++
-                        ) ...[
+                        ..._buildChat(context),
+
+                        if (widget.isAnswerLoading)
                           Align(
-                            alignment: Alignment.centerRight,
-                            child: InformationQuestionContainer(
-                              question:
-                                  widget.information.chatTurns[i].question,
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(10),
+                              child: CircularProgressIndicator(
+                                color: theme.primaryColor,
+                                backgroundColor: theme.scaffoldBackgroundColor,
+                              ),
                             ),
                           ),
-                          if (widget.information.chatTurns[i].answer != null)
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: InformationAnswerContainer(
-                                answer: widget.information.chatTurns[i].answer!,
-                                isSimplified:
-                                    widget
-                                        .information
-                                        .chatTurns[i]
-                                        .isSimplified ??
-                                    false,
-                              ),
-                            ),
-
-                          if (widget.information.chatTurns[i].answer == null)
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsetsGeometry.all(10),
-                                child: CircularProgressIndicator(
-                                  color: theme.primaryColor,
-                                  backgroundColor:
-                                      theme.scaffoldBackgroundColor,
-                                ),
-                              ),
-                            ),
-                        ],
                       ],
                     ),
                   ),

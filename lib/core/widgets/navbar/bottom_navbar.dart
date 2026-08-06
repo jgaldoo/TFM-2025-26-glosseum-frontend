@@ -20,28 +20,32 @@ class BottomNavbar<T> extends ConsumerWidget implements PreferredSizeWidget {
     return Container(
       height: height,
       color: navTheme.backgroundColor,
-      child: SafeArea(
-        child: Row(
-          children: [
-            for (final entry in entries)
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      left: BorderSide(
-                        color: GlosseumColors.darkColor,
-                        width: 0.5,
-                      ),
-                      right: BorderSide(
-                        color: GlosseumColors.darkColor,
-                        width: 0.5,
+      child: MediaQuery.removeViewInsets(
+        context: context,
+        removeBottom: true,
+        child: SafeArea(
+          child: Row(
+            children: [
+              for (final entry in entries)
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        left: BorderSide(
+                          color: GlosseumColors.darkColor,
+                          width: 0.5,
+                        ),
+                        right: BorderSide(
+                          color: GlosseumColors.darkColor,
+                          width: 0.5,
+                        ),
                       ),
                     ),
+                    child: entry,
                   ),
-                  child: entry,
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

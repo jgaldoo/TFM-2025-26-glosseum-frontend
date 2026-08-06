@@ -28,10 +28,15 @@ class NetworkService {
 
   Future<ApiResult<T>> safeRequest<T>(
     Future<Response> Function() call,
-    T Function(Map<String, dynamic>) fromJson,
+    T Function(dynamic) fromJson,
   ) async {
     try {
+      print("safeRequest entered");
+
+      print("checking status...");
       await checkStatus();
+      print('status checked');
+
       final response = await call();
 
       return ApiResult.success(
