@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/widgets/track_scrollbar.dart';
 import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
+import 'package:glosseum_frontend/model/information/domain/chat/chat_message.dart';
 import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/information/ui/information_answer_container.dart';
 import 'package:glosseum_frontend/model/information/ui/information_question_container.dart';
@@ -21,6 +22,51 @@ class InformationText extends StatefulWidget {
 }
 
 class _InformationTextState extends State<InformationText> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void didUpdateWidget(covariant InformationText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final oldCount = oldWidget.information.chatSession != null
+        ? oldWidget.information.chatSession!.history.length
+        : 0;
+    final newCount = widget.information.chatSession != null
+        ? widget.information.chatSession!.history.length
+        : 0;
+
+    if (newCount > oldCount) {
+      _scrollToBottom();
+    }
+  }
+
+  void _scrollToBottom() {
+    if (!_scrollController.hasClients) return;
+
+    final shouldScrollDown =
+        _scrollController.position.maxScrollExtent -
+            _scrollController.position.pixels <=
+        100;
+
+    if (!shouldScrollDown) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   List<Widget> _buildChat(BuildContext context) {
     final sessionHistory = widget.information.chatSession != null
         ? widget.information.chatSession!.history
@@ -55,6 +101,7 @@ class _InformationTextState extends State<InformationText> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 22.5),
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
