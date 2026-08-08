@@ -1,8 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_session_dto.dart';
-import 'package:glosseum_frontend/model/information/data/dtos/information_answer_dto.dart';
-import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
-import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
 import 'package:glosseum_frontend/model/information/domain/chat/chat_message.dart';
 
 part 'chat_session.freezed.dart';

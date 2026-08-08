@@ -1,9 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_message_dto.dart';
-import 'package:glosseum_frontend/model/information/data/dtos/information_answer_dto.dart';
-import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
-import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
 
 part 'chat_message.freezed.dart';
 

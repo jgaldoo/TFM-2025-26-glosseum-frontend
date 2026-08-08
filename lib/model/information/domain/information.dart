@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
 import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
 import 'package:glosseum_frontend/model/information/domain/chat/chat_session.dart';
-import 'package:glosseum_frontend/model/information/domain/chat_turn/chat_turn.dart';
 
 part 'information.freezed.dart';
 
