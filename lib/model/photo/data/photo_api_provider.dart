@@ -32,6 +32,6 @@ class PhotoAPI extends _$PhotoAPI {
 
     return networkService.safeRequest<InformationDTO>(() {
       return networkService.dio.post('/transcribe', data: formData);
-    }, InformationDTO.fromJson);
+    }, (json) => InformationDTO.fromJson(json));
   }
 }

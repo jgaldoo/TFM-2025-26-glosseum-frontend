@@ -11,21 +11,24 @@ class InformationQuestionContainer extends StatelessWidget {
     final theme = Theme.of(context);
     final chatBubbleTheme = chatBubbleThemeOf(context);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: chatBubbleTheme.chatBubbleColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-          bottomLeft: Radius.circular(10),
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: chatBubbleTheme.chatBubbleColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10),
+            topRight: Radius.circular(10),
+            bottomLeft: Radius.circular(10),
+          ),
         ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Text(
-          question,
-          style: theme.textTheme.bodyMedium,
-          textAlign: TextAlign.left,
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            question,
+            style: theme.textTheme.bodyMedium,
+            textAlign: TextAlign.left,
+          ),
         ),
       ),
     );

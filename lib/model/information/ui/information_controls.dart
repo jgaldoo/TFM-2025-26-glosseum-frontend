@@ -5,12 +5,13 @@ import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class InformationControls extends ConsumerStatefulWidget {
-  final Function(String question) askQuestion;
+  final Function(BuildContext context, WidgetRef ref, String message)
+  sendMessage;
   final bool isAnswerLoading;
 
   const InformationControls({
     super.key,
-    required this.askQuestion,
+    required this.sendMessage,
     required this.isAnswerLoading,
   });
 
@@ -67,7 +68,7 @@ class _InformationControlsState extends ConsumerState<InformationControls> {
                       child: IconButton(
                         onPressed: canSend
                             ? () {
-                                widget.askQuestion(value.text);
+                                widget.sendMessage(context, ref, value.text);
                                 textControlNotifier.controller.clear();
                               }
                             : null,
