@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/widgets/track_scrollbar.dart';
 import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
-import 'package:glosseum_frontend/model/information/domain/chat/chat_message.dart';
 import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/information/ui/information_answer_container.dart';
 import 'package:glosseum_frontend/model/information/ui/information_question_container.dart';
@@ -34,8 +33,14 @@ class _InformationTextState extends State<InformationText> {
     final newCount = widget.information.chatSession != null
         ? widget.information.chatSession!.history.length
         : 0;
+    final oldContent = oldCount != 0
+        ? oldWidget.information.chatSession!.history.last.content
+        : '';
+    final newContent = newCount != 0
+        ? widget.information.chatSession!.history.last.content
+        : '';
 
-    if (newCount > oldCount) {
+    if (newCount > oldCount || oldContent != newContent) {
       _scrollToBottom();
     }
   }

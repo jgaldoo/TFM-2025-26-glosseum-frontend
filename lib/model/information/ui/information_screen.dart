@@ -6,9 +6,9 @@ import 'package:glosseum_frontend/core/widgets/grabbable_panel/error_grabbable_p
 import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/top_navbar.dart';
-import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_message_dto.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_session_dto.dart';
+import 'package:glosseum_frontend/model/information/data/dtos/chat_stream_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_api_provider.dart';
 import 'package:glosseum_frontend/model/information/domain/chat/chat_message.dart';
 import 'package:glosseum_frontend/model/information/domain/chat/chat_session.dart';
@@ -33,35 +33,6 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
   bool _isAnswerLoading = false;
   bool _isSimplifying = false;
 
-  void _onMessageSuccess(
-    ChatMessageResponseDTO messageDTO,
-    int statusCode,
-    String message,
-  ) {
-    _information = _information.copyWith(
-      chatSession: _information.chatSession!.copyWith(
-        history: [
-          ..._information.chatSession!.history,
-          ChatMessage.fromDTO(messageDTO),
-        ],
-      ),
-    );
-    setState(() {
-      _isAnswerLoading = false;
-    });
-  }
-
-  void _onChatError(ApiErrorType errorType, int statusCode, String message) {
-    showModalBottomSheet(
-      context: context,
-      enableDrag: false,
-      isScrollControlled: true,
-      builder: (_) {
-        return ErrorGrabbablePanel(statusCode: statusCode, message: message);
-      },
-    );
-  }
-
   Future<void> _createSession(BuildContext context, WidgetRef ref) async {
     final ApiResult<ChatSessionResponseDTO> sessionResult = await ref
         .read(informationAPIProvider.notifier)
@@ -81,7 +52,78 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
     );
   }
 
-  Future<ApiResult<ChatMessageResponseDTO>> _registerMessage(
+  // Stream chat interaction methods
+  Future<void> _onStreamMessageSuccess(
+    Stream<ChatMessageStreamResponseDTO> messageStreamDTOGenerator,
+    int statusCode,
+    String message,
+  ) async {
+    await for (final messageStreamDTO in messageStreamDTOGenerator) {
+      debugPrint(
+        'STREAM EVENT: ${messageStreamDTO.stream} | ${messageStreamDTO.content}',
+      );
+      switch (messageStreamDTO.stream) {
+        case ChatStreamEnum.start:
+          final receivedMessage = ChatMessage.fromStreamDTO(messageStreamDTO);
+
+          setState(() {
+            _information = _information.copyWith(
+              chatSession: _information.chatSession!.copyWith(
+                history: [
+                  ..._information.chatSession!.history,
+                  receivedMessage,
+                ],
+              ),
+            );
+            _isAnswerLoading = true;
+          });
+
+        case ChatStreamEnum.chunk:
+          final history = _information.chatSession!.history;
+
+          final updatedMessage = history.last.appendContent(
+            messageStreamDTO.content ?? '',
+          );
+
+          setState(() {
+            _information = _information.copyWith(
+              chatSession: _information.chatSession!.copyWith(
+                history: [
+                  ...history.sublist(0, history.length - 1),
+                  updatedMessage,
+                ],
+              ),
+            );
+          });
+
+        case ChatStreamEnum.end:
+          setState(() {
+            _isAnswerLoading = false;
+          });
+      }
+    }
+
+    // Optional: handle a stream that ends without an explicit `end` event.
+    if (mounted) {
+      setState(() {
+        _isAnswerLoading = false;
+      });
+    }
+  }
+
+  void _onChatError(ApiErrorType errorType, int statusCode, String message) {
+    showModalBottomSheet(
+      context: context,
+      enableDrag: false,
+      isScrollControlled: true,
+      builder: (_) {
+        return ErrorGrabbablePanel(statusCode: statusCode, message: message);
+      },
+    );
+  }
+
+  Future<ApiResult<Stream<ChatMessageStreamResponseDTO>>>
+  _registerStreamMessage(
     BuildContext context,
     WidgetRef ref,
     String message,
@@ -100,9 +142,9 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
       });
     }
 
-    return await ref
+    return ref
         .read(informationAPIProvider.notifier)
-        .chat(
+        .chatStream(
           ChatMessageRequestDTO(
             sessionId: _information.chatSession!.sessionId,
             message: message,
@@ -110,7 +152,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
         );
   }
 
-  void _sendMessage(
+  Future<void> _sendStreamMessage(
     BuildContext context,
     WidgetRef ref,
     String message,
@@ -120,21 +162,17 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
       _isAnswerLoading = true;
     });
 
-    final ApiResult<ChatMessageResponseDTO> chatResult = await _registerMessage(
-      context,
-      ref,
-      message,
-      updateHistory,
-    );
+    final ApiResult<Stream<ChatMessageStreamResponseDTO>> chatResult =
+        await _registerStreamMessage(context, ref, message, updateHistory);
 
     // Ensure the widget exists before trying to do
     // further operations
     if (!context.mounted) return;
 
-    chatResult.when(success: _onMessageSuccess, error: _onChatError);
+    chatResult.when(success: _onStreamMessageSuccess, error: _onChatError);
   }
 
-  void _ensureSendMessage(
+  Future<void> _ensureSendStreamMessage(
     BuildContext context,
     WidgetRef ref,
     String message,
@@ -153,24 +191,20 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
       _isAnswerLoading = true;
     });
 
-    final ApiResult<ChatMessageResponseDTO> chatResult = await _registerMessage(
-      context,
-      ref,
-      message,
-      true,
-    );
+    final ApiResult<Stream<ChatMessageStreamResponseDTO>> chatResult =
+        await _registerStreamMessage(context, ref, message, true);
 
     // Ensure the widget exists before trying to do
     // further operations
     if (!context.mounted) return;
 
     chatResult.when(
-      success: _onMessageSuccess,
+      success: _onStreamMessageSuccess,
       error: (errorType, statusCode, message) async {
         if (errorType == ApiErrorType.notFound) {
           await _createSession(context, ref);
           if (!context.mounted) return;
-          _sendMessage(context, ref, message, false);
+          _sendStreamMessage(context, ref, message, false);
         } else {
           _onChatError(errorType, statusCode, message);
         }
@@ -206,7 +240,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: InformationControls(
-                sendMessage: _ensureSendMessage,
+                sendMessage: _ensureSendStreamMessage,
                 isAnswerLoading: _isAnswerLoading,
               ),
             ),

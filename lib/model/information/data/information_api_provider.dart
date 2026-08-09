@@ -26,21 +26,22 @@ class InformationAPI extends _$InformationAPI {
     }, (json) => ChatSessionResponseDTO.fromJson(json));
   }
 
-  Future<ApiResult<ChatMessageResponseDTO>> chat(
+  Future<ApiResult<Stream<ChatMessageStreamResponseDTO>>> chatStream(
     ChatMessageRequestDTO chatMessageRequestDTO,
   ) async {
     final networkService = ref.read(networkServiceProvider);
 
-    return networkService.safeRequest<ChatMessageResponseDTO>(() {
+    return networkService.safeStreamRequest<ChatMessageStreamResponseDTO>(() {
       print("Chatting...");
       return networkService.dio.post(
-        '/chat/${chatMessageRequestDTO.sessionId}',
+        '/chat_stream/${chatMessageRequestDTO.sessionId}',
         data: chatMessageRequestDTO.toJson(),
         options: Options(
+          responseType: ResponseType.stream,
           sendTimeout: const Duration(seconds: 15),
           receiveTimeout: const Duration(seconds: 30),
         ),
       );
-    }, (json) => ChatMessageResponseDTO.fromJson(json));
+    }, (json) => ChatMessageStreamResponseDTO.fromJson(json));
   }
 }
