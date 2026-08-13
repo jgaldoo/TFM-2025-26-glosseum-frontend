@@ -5,6 +5,7 @@ import 'package:glosseum_frontend/model/information/data/information_type_enum.d
 import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/information/ui/information_answer_container.dart';
 import 'package:glosseum_frontend/model/information/ui/information_question_container.dart';
+import 'package:glosseum_frontend/model/technicism/domain/technicism.dart';
 
 class InformationText extends StatefulWidget {
   final Information information;
@@ -64,6 +65,86 @@ class _InformationTextState extends State<InformationText> {
         curve: Curves.easeOut,
       );
     });
+  }
+
+  InlineSpan _annotateTechnicism(String technicism) {
+    return TextSpan(
+      children: [
+        TextSpan(
+          text: technicism,
+          style: const TextStyle(decoration: TextDecoration.underline),
+        ),
+        WidgetSpan(
+          alignment: PlaceholderAlignment.baseline,
+          baseline: TextBaseline.alphabetic,
+          child: Transform.translate(
+            offset: const Offset(1, -4),
+            child: const Text('?', style: TextStyle(fontSize: 8)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<InlineSpan> _buildText() {
+    final technicismOccurrences =
+        (widget.information.technicisms ?? [])
+            .expand(
+              (entity) => entity.occurrences.map(
+                (occurrence) => FlattenedTechnicismOccurrence(
+                  parent: entity,
+                  inText: occurrence.inText,
+                  position: occurrence.position,
+                ),
+              ),
+            )
+            .toList()
+          ..sort((a, b) => a.position.compareTo(b.position));
+
+    final spans = <InlineSpan>[];
+    var cursor = 0;
+
+    for (final occurrence in technicismOccurrences) {
+      // Texto antes del tecnicismo
+      if (cursor < occurrence.position) {
+        spans.add(
+          TextSpan(
+            text: widget.information.content.substring(
+              cursor,
+              occurrence.position,
+            ),
+          ),
+        );
+      }
+
+      // Tecnicismo
+      spans.add(
+        TextSpan(
+          text: occurrence.inText,
+          style: const TextStyle(decoration: TextDecoration.underline),
+        ),
+      );
+
+      spans.add(
+        WidgetSpan(
+          alignment: PlaceholderAlignment.baseline,
+          baseline: TextBaseline.alphabetic,
+          child: Transform.translate(
+            offset: const Offset(1, -4),
+            child: const Text('?', style: TextStyle(fontSize: 8)),
+          ),
+        ),
+      );
+
+      cursor = occurrence.position + occurrence.inText.length;
+    }
+
+    // Unir lo que quede de texto al final
+    if (cursor < widget.information.content.length) {
+      spans.add(TextSpan(text: widget.information.content.substring(cursor)));
+    }
+
+    return spans;
   }
 
   @override
@@ -141,9 +222,11 @@ class _InformationTextState extends State<InformationText> {
                           color: theme.primaryColor,
                         ),
 
-                        Text(
-                          widget.information.content,
-                          style: theme.textTheme.bodyMedium,
+                        RichText(
+                          text: TextSpan(
+                            style: theme.textTheme.bodyMedium,
+                            children: _buildText(),
+                          ),
                           textAlign: TextAlign.left,
                         ),
 

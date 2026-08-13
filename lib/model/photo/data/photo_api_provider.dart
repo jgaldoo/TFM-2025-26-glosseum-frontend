@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/network_service.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
-import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/photo/data/dtos/photo_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
