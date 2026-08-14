@@ -21,11 +21,19 @@ class InformationControls extends ConsumerStatefulWidget {
 }
 
 class _InformationControlsState extends ConsumerState<InformationControls> {
+  void _encapsulatedSendMessage(String message, void Function() clearField) {
+    if (!widget.isAnswerLoading && message.trim().isNotEmpty) {
+      FocusScope.of(context).unfocus();
+      widget.sendMessage(context, ref, message);
+      clearField();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textControlNotifier = ref.watch(
-      textControlProvider('information-question').notifier,
+      textControlProvider('information-chat').notifier,
     );
 
     return Container(
@@ -68,8 +76,10 @@ class _InformationControlsState extends ConsumerState<InformationControls> {
                       child: IconButton(
                         onPressed: canSend
                             ? () {
-                                widget.sendMessage(context, ref, value.text);
-                                textControlNotifier.controller.clear();
+                                _encapsulatedSendMessage(
+                                  value.text,
+                                  textControlNotifier.controller.clear,
+                                );
                               }
                             : null,
                         icon: GlosseumIcon(
@@ -100,6 +110,12 @@ class _InformationControlsState extends ConsumerState<InformationControls> {
                   ),
                 ),
               ),
+              onSubmitted: (message) {
+                _encapsulatedSendMessage(
+                  message,
+                  textControlNotifier.controller.clear,
+                );
+              },
             ),
           ],
         ),

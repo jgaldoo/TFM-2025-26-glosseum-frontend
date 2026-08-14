@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/theme/extensions/glosseum_track_scrollbar_theme.dart';
 
-class TrackScrollbar extends StatelessWidget {
+class TrackScrollbar extends StatefulWidget {
   // Scrollbar parameters
   final Widget child;
   final ScrollController? controller;
@@ -33,50 +33,105 @@ class TrackScrollbar extends StatelessWidget {
   });
 
   @override
+  State<TrackScrollbar> createState() => _TrackScrollbarState();
+}
+
+class _TrackScrollbarState extends State<TrackScrollbar> {
+  ScrollController? _usedController;
+  bool _showTrack = false;
+
+  void _updateShowTrack() {
+    final shouldShow =
+        _usedController != null &&
+        _usedController!.hasClients &&
+        _usedController!.position.maxScrollExtent > 0;
+
+    if (shouldShow != _showTrack) {
+      setState(() {
+        _showTrack = shouldShow;
+      });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final ScrollController possibleController =
+        widget.controller ?? PrimaryScrollController.of(context);
+
+    if (possibleController != _usedController) {
+      if (_usedController != null) {
+        _usedController!.removeListener(_updateShowTrack);
+      }
+
+      _usedController = possibleController;
+      _usedController!.addListener(_updateShowTrack);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _updateShowTrack();
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_usedController != null) {
+      _usedController!.removeListener(_updateShowTrack);
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final trackTheme = trackScrollbarThemeOf(context);
 
-    final Color? usedTrackColor = trackColor ?? trackTheme.trackColor;
+    final Color? usedTrackColor = widget.trackColor ?? trackTheme.trackColor;
     final double usedTrackThickness =
-        trackThickness ?? trackTheme.trackThickness;
+        widget.trackThickness ?? trackTheme.trackThickness;
     final double usedThickness =
-        (thickness ?? theme.scrollbarTheme.thickness?.resolve({})) ?? 8.0;
+        (widget.thickness ?? theme.scrollbarTheme.thickness?.resolve({})) ??
+        8.0;
 
     return Stack(
       children: [
-        Positioned.fill(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                0,
-                0,
-                (usedThickness - usedTrackThickness) * 0.5,
-                0,
-              ),
-              child: Container(
-                width: usedTrackThickness,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                  color: usedTrackColor,
-                  borderRadius: BorderRadius.circular(usedTrackThickness * 0.5),
+        if (_showTrack)
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  0,
+                  0,
+                  (usedThickness - usedTrackThickness) * 0.5,
+                  0,
+                ),
+                child: Container(
+                  width: usedTrackThickness,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: usedTrackColor,
+                    borderRadius: BorderRadius.circular(
+                      usedTrackThickness * 0.5,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
 
         Scrollbar(
-          controller: controller,
-          thumbVisibility: thumbVisibility,
+          controller: _usedController,
+          thumbVisibility: widget.thumbVisibility,
           trackVisibility: false,
-          thickness: thickness,
-          radius: radius,
-          interactive: interactive,
-          notificationPredicate: notificationPredicate,
-          scrollbarOrientation: scrollbarOrientation,
-          child: child,
+          thickness: widget.thickness,
+          radius: widget.radius,
+          interactive: widget.interactive,
+          notificationPredicate: widget.notificationPredicate,
+          scrollbarOrientation: widget.scrollbarOrientation,
+          child: widget.child,
         ),
       ],
     );
