@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
+import 'package:glosseum_frontend/core/widgets/track_scrollbar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class PanelTab {
@@ -37,20 +38,26 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
   static const _minimumHeight = 0.3;
 
   late List<PanelTab> tabs;
+  late List<ScrollController> _controllers;
   double _height = 0.5;
 
-  Widget _buildContent(Widget? content) {
-    return Expanded(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: content,
+  Widget _buildContent(Widget? content, ScrollController? controller) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 7.5),
+          child: TrackScrollbar(
+            controller: controller,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 22.5),
+              child: SingleChildScrollView(
+                controller: controller,
+                child: content,
+              ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -59,6 +66,18 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
     super.initState();
 
     tabs = widget.tabs ?? [];
+    _controllers = [];
+    for (final tab in tabs) {
+      _controllers.add(ScrollController());
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -122,25 +141,42 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
             ],
           ),
 
-          if (widget.title != null) Text(widget.title!),
+          if (widget.title != null)
+            Text(widget.title!, style: theme.textTheme.titleMedium),
 
           if (tabs.isNotEmpty) ...[
-            TabBar(
-              tabs: [
-                for (final tab in tabs)
-                  Tab(
-                    child: Text(
-                      tab.title,
-                      style: TextStyle(color: tab.enabled ? null : Colors.grey),
+            DefaultTabController(
+              length: tabs.length,
+              child: Expanded(
+                child: Column(
+                  children: [
+                    TabBar(
+                      tabs: [
+                        for (final tab in tabs)
+                          Tab(
+                            child: Text(
+                              tab.title,
+                              style: theme.textTheme.bodyMedium!.copyWith(
+                                color: tab.enabled ? null : Colors.grey,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                  ),
-              ],
-            ),
-            TabBarView(
-              children: [for (final tab in tabs) _buildContent(tab.child)],
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          for (final (i, tab) in tabs.indexed)
+                            _buildContent(tab.child, _controllers[i]),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ] else
-            _buildContent(widget.innerContent),
+            _buildContent(widget.innerContent, null),
         ],
       ),
     );
