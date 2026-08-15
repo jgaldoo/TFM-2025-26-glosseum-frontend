@@ -67,7 +67,7 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
 
     tabs = widget.tabs ?? [];
     _controllers = [];
-    for (final tab in tabs) {
+    for (final _ in tabs) {
       _controllers.add(ScrollController());
     }
   }

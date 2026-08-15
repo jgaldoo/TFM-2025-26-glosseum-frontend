@@ -7,12 +7,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class InformationControls extends ConsumerStatefulWidget {
   final Function(BuildContext context, WidgetRef ref, String message)
   sendMessage;
+  final Function(BuildContext context, WidgetRef ref) simplify;
   final bool isAnswerLoading;
+  final bool isSimplified;
 
   const InformationControls({
     super.key,
     required this.sendMessage,
+    required this.simplify,
     required this.isAnswerLoading,
+    required this.isSimplified,
   });
 
   @override
@@ -51,9 +55,11 @@ class _InformationControlsState extends ConsumerState<InformationControls> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TextButton(
-                    onPressed: () {
-                      // TODO: Send to backend to simplify
-                    },
+                    onPressed: widget.isSimplified
+                        ? () {
+                            widget.simplify(context, ref);
+                          }
+                        : null,
                     style: theme.textButtonTheme.style,
                     child: Text('Simplificar'),
                   ),
