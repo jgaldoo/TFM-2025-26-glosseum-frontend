@@ -113,15 +113,55 @@ class GlosseumTheme {
         ),
       ),
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return GlosseumColors.darkenedPrimary;
+          }
+          return GlosseumColors.primary;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return GlosseumColors.lightGrayColor;
+          }
+          return GlosseumColors.lightColor;
+        }),
+        shape: WidgetStatePropertyAll<RoundedRectangleBorder?>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        textStyle: WidgetStatePropertyAll<TextStyle?>(
+          TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    ),
     textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        backgroundColor: GlosseumColors.primary,
-        foregroundColor: GlosseumColors.lightColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        textStyle: TextStyle(
-          fontFamily: _fontFamily,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return GlosseumColors.darkenedPrimary;
+          }
+          return GlosseumColors.primary;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return GlosseumColors.lightGrayColor;
+          }
+          return GlosseumColors.lightColor;
+        }),
+        shape: WidgetStatePropertyAll<RoundedRectangleBorder?>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        textStyle: WidgetStatePropertyAll<TextStyle?>(
+          TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     ),

@@ -3,7 +3,6 @@ import 'package:glosseum_frontend/core/config/navbar_entries.dart';
 import 'package:glosseum_frontend/core/enums/api_error_type.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/widgets/grabbable_panel/error_grabbable_panel.dart';
-import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/top_navbar.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_message_dto.dart';
@@ -30,9 +29,9 @@ class InformationScreen extends ConsumerStatefulWidget {
 class _InformationScreenState extends ConsumerState<InformationScreen> {
   late Information _information;
 
-  bool _isLoading = false;
   bool _isAnswerLoading = false;
   bool _isSimplifying = false;
+  String? _progressInformation;
 
   Future<void> _simplifyText(BuildContext context, WidgetRef ref) async {
     final ApiResult<Stream<InformationStreamDTO>> simplificationResult =
@@ -57,7 +56,9 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
             'STREAM EVENT: ${informationStreamDTO.stream} |'
             ' ${informationStreamDTO.content}',
           );
+
           setState(() {
+            _progressInformation = informationStreamDTO.streamInfo?.text;
             _information = _information.updateFromStreamDTO(
               informationStreamDTO,
             );
@@ -65,7 +66,9 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
         }
 
         setState(() {
+          _progressInformation = null;
           _isSimplifying = false;
+          _information = _information.copyWith(isSimplified: true);
         });
       },
       error: _onError,
@@ -268,29 +271,26 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
       },
       child: Scaffold(
         appBar: TopNavbar(rightEntries: mainTopRightNavbarEntries),
-        body: LoadingBlurOverlay(
-          isLoading: _isLoading,
-          useBlur: false,
-          child: Column(
-            children: [
-              Expanded(
-                child: InformationText(
-                  information: _information,
-                  isAnswerLoading: _isAnswerLoading,
-                  isSimplifying: _isSimplifying,
-                ),
+        body: Column(
+          children: [
+            Expanded(
+              child: InformationText(
+                information: _information,
+                isAnswerLoading: _isAnswerLoading,
+                isSimplifying: _isSimplifying,
+                progressInformation: _progressInformation,
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: InformationControls(
-                  sendMessage: _ensureSendStreamMessage,
-                  simplify: _simplifyText,
-                  isAnswerLoading: _isAnswerLoading,
-                  isSimplified: widget.information.isSimplified,
-                ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: InformationControls(
+                sendMessage: _ensureSendStreamMessage,
+                simplify: _simplifyText,
+                isAnswerLoading: _isAnswerLoading,
+                isSimplified: (_isSimplifying || _information.isSimplified),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         bottomNavigationBar: BottomNavbar(entries: mainBottomNavbarEntries),
       ),

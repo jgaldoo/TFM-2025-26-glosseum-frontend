@@ -176,7 +176,7 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
               ),
             ),
           ] else
-            _buildContent(widget.innerContent, null),
+            Expanded(child: _buildContent(widget.innerContent, null)),
         ],
       ),
     );

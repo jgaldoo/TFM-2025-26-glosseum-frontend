@@ -55,7 +55,7 @@ class _InformationControlsState extends ConsumerState<InformationControls> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TextButton(
-                    onPressed: widget.isSimplified
+                    onPressed: !widget.isSimplified
                         ? () {
                             widget.simplify(context, ref);
                           }

@@ -888,6 +888,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  simple_typing_indicator:
+    dependency: "direct main"
+    description:
+      name: simple_typing_indicator
+      sha256: "128b089e653deeec2dbdd576433eb78b1747381478815e711281288f7dff9cc3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

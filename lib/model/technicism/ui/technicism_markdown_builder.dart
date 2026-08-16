@@ -13,10 +13,17 @@ class TechnicismMarkdownBuilder extends MarkdownElementBuilder {
   }
 
   @override
-  Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
-    final style = (preferredStyle ?? const TextStyle()).copyWith(
+  Widget? visitElementAfterWithContext(
+    BuildContext context,
+    md.Element element,
+    TextStyle? preferredStyle,
+    TextStyle? parentStyle,
+  ) {
+    final style = (parentStyle ?? preferredStyle ?? const TextStyle()).copyWith(
       decoration: TextDecoration.underline,
     );
+
+    debugPrint('weight: ${preferredStyle?.fontWeight}');
 
     return RichText(
       text: TextSpan(

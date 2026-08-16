@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:glosseum_frontend/model/information/data/dtos/information_stream_progress_enum.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/stream_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
 import 'package:glosseum_frontend/model/technicism/data/technicism_dto.dart';
@@ -25,6 +26,8 @@ abstract class InformationDTO with _$InformationDTO {
 abstract class InformationStreamDTO with _$InformationStreamDTO {
   const factory InformationStreamDTO({
     required StreamEnum stream,
+    @JsonKey(fromJson: InformationStreamProgressEnum.fromString)
+    InformationStreamProgressEnum? streamInfo,
     String? content,
     bool? isSimplified,
     List<TechnicismDTO>? technicisms,
