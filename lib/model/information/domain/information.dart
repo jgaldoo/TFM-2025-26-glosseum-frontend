@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
+import 'package:glosseum_frontend/model/information/data/dtos/stream_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
 import 'package:glosseum_frontend/model/information/domain/chat/chat_session.dart';
 import 'package:glosseum_frontend/model/technicism/domain/technicism.dart';
@@ -10,6 +11,9 @@ part 'information.g.dart';
 
 @freezed
 abstract class Information with _$Information {
+  // Private constructor for inheriting methods
+  const Information._();
+
   const factory Information({
     required String title,
     required String content,
@@ -29,4 +33,20 @@ abstract class Information with _$Information {
     informationType: infoDTO.informationType,
     isSimplified: infoDTO.isSimplified,
   );
+
+  Information updateFromStreamDTO(InformationStreamDTO informationStreamDTO) {
+    final bool resetTextContent =
+        informationStreamDTO.stream == StreamEnum.start ||
+        informationStreamDTO.technicisms != null;
+
+    return copyWith(
+      content: resetTextContent
+          ? informationStreamDTO.content ?? ''
+          : content + (informationStreamDTO.content ?? ''),
+      technicisms: informationStreamDTO.technicisms != null
+          ? informationStreamDTO.technicisms!.map(Technicism.fromDTO).toList()
+          : technicisms,
+      isSimplified: informationStreamDTO.isSimplified ?? isSimplified,
+    );
+  }
 }

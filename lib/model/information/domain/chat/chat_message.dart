@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_message_dto.dart';
-import 'package:glosseum_frontend/model/information/data/dtos/chat_stream_enum.dart';
+import 'package:glosseum_frontend/model/information/data/dtos/stream_enum.dart';
 
 part 'chat_message.freezed.dart';
 
@@ -39,7 +39,7 @@ abstract class ChatMessage with _$ChatMessage {
   factory ChatMessage.fromStreamDTO(
     ChatMessageStreamResponseDTO chatStreamMessageDTO,
   ) {
-    if (chatStreamMessageDTO.stream != ChatStreamEnum.start) {
+    if (chatStreamMessageDTO.stream != StreamEnum.start) {
       throw ArgumentError(
         'Invalid streamStatus. ChatMessage entities can only be created from'
         ' StreamDTOs with the start status.',

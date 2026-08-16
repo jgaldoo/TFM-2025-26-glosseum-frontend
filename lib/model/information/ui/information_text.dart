@@ -1,4 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
 import 'package:glosseum_frontend/core/widgets/track_scrollbar.dart';
 import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
@@ -6,15 +9,23 @@ import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/information/ui/information_answer_container.dart';
 import 'package:glosseum_frontend/model/information/ui/information_question_container.dart';
 import 'package:glosseum_frontend/model/technicism/domain/technicism.dart';
+import 'package:glosseum_frontend/model/technicism/ui/technicism_definition_panel.dart';
+import 'package:glosseum_frontend/model/technicism/ui/technicism_inline_syntax.dart';
+import 'package:glosseum_frontend/model/technicism/ui/technicism_markdown_builder.dart';
+import 'package:simple_typing_indicator/simple_typing_indicator.dart';
 
 class InformationText extends StatefulWidget {
   final Information information;
   final bool isAnswerLoading;
+  final bool isSimplifying;
+  final String? progressInformation;
 
   const InformationText({
     super.key,
     required this.information,
     required this.isAnswerLoading,
+    required this.isSimplifying,
+    this.progressInformation,
   });
 
   @override
@@ -23,6 +34,14 @@ class InformationText extends StatefulWidget {
 
 class _InformationTextState extends State<InformationText> {
   final ScrollController _scrollController = ScrollController();
+  final List<TapGestureRecognizer> _tapRecognizers = [];
+
+  void _showDefinition(Technicism technicism) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => TechnicismDefinitionPanel(technicism: technicism),
+    );
+  }
 
   @override
   void didUpdateWidget(covariant InformationText oldWidget) {
@@ -67,6 +86,18 @@ class _InformationTextState extends State<InformationText> {
     });
   }
 
+  Technicism? _findTechnicism(String technicismForm) {
+    for (final technicism in widget.information.technicisms ?? []) {
+      if (technicism.occurrences.any(
+        (occurrence) => occurrence.inText == technicismForm,
+      )) {
+        return technicism;
+      }
+    }
+
+    return null;
+  }
+
   InlineSpan _annotateTechnicism(String technicism) {
     return TextSpan(
       children: [
@@ -105,6 +136,13 @@ class _InformationTextState extends State<InformationText> {
     var cursor = 0;
 
     for (final occurrence in technicismOccurrences) {
+      final recognizer = TapGestureRecognizer()
+        ..onTap = () {
+          _showDefinition(occurrence.parent);
+        };
+
+      _tapRecognizers.add(recognizer);
+
       // Texto antes del tecnicismo
       if (cursor < occurrence.position) {
         spans.add(
@@ -122,6 +160,7 @@ class _InformationTextState extends State<InformationText> {
         TextSpan(
           text: occurrence.inText,
           style: const TextStyle(decoration: TextDecoration.underline),
+          recognizer: recognizer,
         ),
       );
 
@@ -130,8 +169,11 @@ class _InformationTextState extends State<InformationText> {
           alignment: PlaceholderAlignment.baseline,
           baseline: TextBaseline.alphabetic,
           child: Transform.translate(
-            offset: const Offset(1, -4),
-            child: const Text('?', style: TextStyle(fontSize: 8)),
+            offset: const Offset(0, -8),
+            child: const Text(
+              '?',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            ),
           ),
         ),
       );
@@ -150,6 +192,10 @@ class _InformationTextState extends State<InformationText> {
   @override
   void dispose() {
     _scrollController.dispose();
+    for (final recognizer in _tapRecognizers) {
+      recognizer.dispose();
+    }
+    super.dispose();
     super.dispose();
   }
 
@@ -184,67 +230,127 @@ class _InformationTextState extends State<InformationText> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 7.5),
               child: TrackScrollbar(
+                controller: _scrollController,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 22.5),
-                  child: SingleChildScrollView(
+                  child: CustomScrollView(
                     controller: _scrollController,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            child: Text(
-                              informationTypeText(
-                                widget.information.informationType,
-                                widget.information.isSimplified,
-                              ),
-                              textAlign: TextAlign.right,
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                color: theme.hintColor,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Text(
-                          widget.information.title,
-                          textAlign: TextAlign.left,
-                          style: theme.textTheme.titleMedium,
-                        ),
-
-                        Divider(
-                          height: 20,
-                          thickness: 3,
-                          indent: 0,
-                          endIndent: 0,
-                          color: theme.primaryColor,
-                        ),
-
-                        RichText(
-                          text: TextSpan(
-                            style: theme.textTheme.bodyMedium,
-                            children: _buildText(),
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-
-                        ..._buildChat(context),
-
-                        if (widget.isAnswerLoading)
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.all(10),
-                              child: CircularProgressIndicator(
-                                color: theme.primaryColor,
-                                backgroundColor: theme.scaffoldBackgroundColor,
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                                child: Text(
+                                  informationTypeText(
+                                    widget.information.informationType,
+                                    widget.information.isSimplified,
+                                  ),
+                                  textAlign: TextAlign.right,
+                                  style: theme.textTheme.labelLarge?.copyWith(
+                                    color: theme.hintColor,
+                                  ),
+                                ),
                               ),
                             ),
+
+                            Text(
+                              widget.information.title,
+                              textAlign: TextAlign.left,
+                              style: theme.textTheme.headlineMedium,
+                            ),
+                            Divider(
+                              height: 20,
+                              thickness: 3,
+                              indent: 0,
+                              endIndent: 0,
+                              color: theme.primaryColor,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: LoadingBlurOverlay(
+                          isLoading:
+                              widget.isSimplifying &&
+                              widget.information.content.isEmpty,
+                          useBlur: false,
+                          useDimming: false,
+                          child: Column(
+                            children: [
+                              if (!widget.isSimplifying ||
+                                  widget.information.content.isNotEmpty) ...[
+                                MarkdownBody(
+                                  data: widget.information.content,
+                                  inlineSyntaxes: [TechnicismInlineSyntax()],
+                                  builders: {
+                                    'technicism': TechnicismMarkdownBuilder(
+                                      onTap: (text) {
+                                        // Find the corresponding special entity.
+                                        final technicism = _findTechnicism(
+                                          text,
+                                        );
+
+                                        if (technicism != null) {
+                                          _showDefinition(technicism);
+                                        }
+                                      },
+                                    ),
+                                  },
+                                ),
+
+                                if (widget.isSimplifying)
+                                  Padding(
+                                    padding: EdgeInsetsGeometry.symmetric(
+                                      vertical: 10,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        if (widget.progressInformation != null)
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsGeometry.directional(
+                                                  end: 10,
+                                                ),
+                                            child: Text(
+                                              widget.progressInformation!,
+                                              style: theme.textTheme.labelMedium
+                                                  ?.copyWith(
+                                                    color: theme.hintColor,
+                                                  ),
+                                            ),
+                                          ),
+                                        SimpleTypingIndicator(),
+                                      ],
+                                    ),
+                                  ),
+
+                                if (!widget.isSimplifying) ...[
+                                  ..._buildChat(context),
+                                  if (widget.isAnswerLoading)
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsetsGeometry.all(10),
+                                        child: CircularProgressIndicator(
+                                          color: theme.primaryColor,
+                                          backgroundColor:
+                                              theme.scaffoldBackgroundColor,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ],
+                            ],
                           ),
-                      ],
-                    ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -255,3 +361,13 @@ class _InformationTextState extends State<InformationText> {
     );
   }
 }
+
+/**
+ * RichText(
+    text: TextSpan(
+    style: theme.textTheme.bodyMedium,
+    children: _buildText(),
+    ),
+    textAlign: TextAlign.left,
+    ),
+ */

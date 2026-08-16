@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 class LoadingBlurOverlay extends StatelessWidget {
   final bool isLoading;
   final bool useBlur;
+  final bool useDimming;
   final Widget child;
 
   const LoadingBlurOverlay({
     super.key,
     required this.isLoading,
-    required this.useBlur,
-    required this.child
+    this.useBlur = true,
+    this.useDimming = true,
+    required this.child,
   });
 
   @override
@@ -24,12 +26,20 @@ class LoadingBlurOverlay extends StatelessWidget {
 
         if (isLoading)
           Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-              child: Container(
-                color: Colors.black.withValues(alpha: 0.2), // subtle dimming
-              ),
-            ),
+            child: useBlur
+                ? BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                    child: Container(
+                      color: useDimming
+                          ? Colors.black.withValues(alpha: 0.2)
+                          : null, // subtle dimming
+                    ),
+                  )
+                : Container(
+                    color: useDimming
+                        ? Colors.black.withValues(alpha: 0.2)
+                        : null, // subtle dimming
+                  ),
           ),
 
         if (isLoading)
@@ -42,5 +52,4 @@ class LoadingBlurOverlay extends StatelessWidget {
       ],
     );
   }
-
 }

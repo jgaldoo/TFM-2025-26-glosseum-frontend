@@ -29,50 +29,50 @@ class GlosseumTheme {
       ),
       displayMedium: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 40,
+        fontSize: 44,
         color: GlosseumColors.darkColor,
       ),
       displaySmall: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 32,
+        fontSize: 40,
         color: GlosseumColors.darkColor,
       ),
       headlineLarge: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 42,
+        fontSize: 36,
         fontWeight: FontWeight.w500,
         color: GlosseumColors.darkColor,
       ),
       headlineMedium: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 34,
+        fontSize: 32,
         fontWeight: FontWeight.w500,
         color: GlosseumColors.darkColor,
       ),
       headlineSmall: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 26,
+        fontSize: 30,
         fontWeight: FontWeight.w500,
         color: GlosseumColors.darkColor,
       ),
       titleLarge: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 42,
+        fontSize: 28,
         color: GlosseumColors.darkColor,
       ),
       titleMedium: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 34,
+        fontSize: 26,
         color: GlosseumColors.darkColor,
       ),
       titleSmall: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 26,
+        fontSize: 24,
         color: GlosseumColors.darkColor,
       ),
       bodyLarge: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 24,
+        fontSize: 20,
         color: GlosseumColors.darkColor,
       ),
       bodyMedium: TextStyle(
@@ -82,12 +82,12 @@ class GlosseumTheme {
       ),
       bodySmall: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 12,
+        fontSize: 16,
         color: GlosseumColors.darkColor,
       ),
       labelLarge: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 18,
+        fontSize: 16,
         color: GlosseumColors.darkColor,
       ),
       labelMedium: TextStyle(
@@ -97,7 +97,7 @@ class GlosseumTheme {
       ),
       labelSmall: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 11,
+        fontSize: 12,
         color: GlosseumColors.darkColor,
       ),
     ),
@@ -113,15 +113,55 @@ class GlosseumTheme {
         ),
       ),
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return GlosseumColors.darkenedPrimary;
+          }
+          return GlosseumColors.primary;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return GlosseumColors.lightGrayColor;
+          }
+          return GlosseumColors.lightColor;
+        }),
+        shape: WidgetStatePropertyAll<RoundedRectangleBorder?>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        textStyle: WidgetStatePropertyAll<TextStyle?>(
+          TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    ),
     textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        backgroundColor: GlosseumColors.primary,
-        foregroundColor: GlosseumColors.lightColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        textStyle: TextStyle(
-          fontFamily: _fontFamily,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return GlosseumColors.darkenedPrimary;
+          }
+          return GlosseumColors.primary;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return GlosseumColors.lightGrayColor;
+          }
+          return GlosseumColors.lightColor;
+        }),
+        shape: WidgetStatePropertyAll<RoundedRectangleBorder?>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        textStyle: WidgetStatePropertyAll<TextStyle?>(
+          TextStyle(
+            fontFamily: _fontFamily,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     ),

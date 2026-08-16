@@ -3,12 +3,12 @@ import 'package:glosseum_frontend/core/config/navbar_entries.dart';
 import 'package:glosseum_frontend/core/enums/api_error_type.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/widgets/grabbable_panel/error_grabbable_panel.dart';
-import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/top_navbar.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_message_dto.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_session_dto.dart';
-import 'package:glosseum_frontend/model/information/data/dtos/chat_stream_enum.dart';
+import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
+import 'package:glosseum_frontend/model/information/data/dtos/stream_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_api_provider.dart';
 import 'package:glosseum_frontend/model/information/domain/chat/chat_message.dart';
 import 'package:glosseum_frontend/model/information/domain/chat/chat_session.dart';
@@ -29,9 +29,51 @@ class InformationScreen extends ConsumerStatefulWidget {
 class _InformationScreenState extends ConsumerState<InformationScreen> {
   late Information _information;
 
-  bool _isLoading = false;
   bool _isAnswerLoading = false;
   bool _isSimplifying = false;
+  String? _progressInformation;
+
+  Future<void> _simplifyText(BuildContext context, WidgetRef ref) async {
+    final ApiResult<Stream<InformationStreamDTO>> simplificationResult =
+        await ref
+            .read(informationAPIProvider.notifier)
+            .simplifyStream(
+              InformationSimplificationRequestDTO(
+                title: _information.title,
+                content: _information.content,
+              ),
+            );
+
+    simplificationResult.when(
+      success: (informationStreamDTOGenerator, statusCode, message) async {
+        setState(() {
+          _isSimplifying = true;
+        });
+
+        await for (final informationStreamDTO
+            in informationStreamDTOGenerator) {
+          debugPrint(
+            'STREAM EVENT: ${informationStreamDTO.stream} |'
+            ' ${informationStreamDTO.content}',
+          );
+
+          setState(() {
+            _progressInformation = informationStreamDTO.streamInfo?.text;
+            _information = _information.updateFromStreamDTO(
+              informationStreamDTO,
+            );
+          });
+        }
+
+        setState(() {
+          _progressInformation = null;
+          _isSimplifying = false;
+          _information = _information.copyWith(isSimplified: true);
+        });
+      },
+      error: _onError,
+    );
+  }
 
   Future<void> _createSession(BuildContext context, WidgetRef ref) async {
     final ApiResult<ChatSessionResponseDTO> sessionResult = await ref
@@ -48,7 +90,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
           );
         });
       },
-      error: _onChatError,
+      error: _onError,
     );
   }
 
@@ -63,7 +105,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
         'STREAM EVENT: ${messageStreamDTO.stream} | ${messageStreamDTO.content}',
       );
       switch (messageStreamDTO.stream) {
-        case ChatStreamEnum.start:
+        case StreamEnum.start:
           final receivedMessage = ChatMessage.fromStreamDTO(messageStreamDTO);
 
           setState(() {
@@ -78,7 +120,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
             _isAnswerLoading = true;
           });
 
-        case ChatStreamEnum.chunk:
+        case StreamEnum.chunk:
           final history = _information.chatSession!.history;
 
           final updatedMessage = history.last.appendContent(
@@ -96,7 +138,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
             );
           });
 
-        case ChatStreamEnum.end:
+        case StreamEnum.end:
           setState(() {
             _isAnswerLoading = false;
           });
@@ -111,7 +153,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
     }
   }
 
-  void _onChatError(ApiErrorType errorType, int statusCode, String message) {
+  void _onError(ApiErrorType errorType, int statusCode, String message) {
     showModalBottomSheet(
       context: context,
       enableDrag: false,
@@ -169,7 +211,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
     // further operations
     if (!context.mounted) return;
 
-    chatResult.when(success: _onStreamMessageSuccess, error: _onChatError);
+    chatResult.when(success: _onStreamMessageSuccess, error: _onError);
   }
 
   Future<void> _ensureSendStreamMessage(
@@ -177,8 +219,6 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
     WidgetRef ref,
     String message,
   ) async {
-    FocusManager.instance.primaryFocus?.unfocus();
-
     if (_information.chatSession == null) {
       await _createSession(context, ref);
     }
@@ -206,7 +246,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
           if (!context.mounted) return;
           _sendStreamMessage(context, ref, message, false);
         } else {
-          _onChatError(errorType, statusCode, message);
+          _onError(errorType, statusCode, message);
         }
 
         setState(() {
@@ -224,30 +264,36 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: TopNavbar(rightEntries: mainTopRightNavbarEntries),
-      body: LoadingBlurOverlay(
-        isLoading: _isLoading,
-        useBlur: false,
-        child: Column(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: TopNavbar(rightEntries: mainTopRightNavbarEntries),
+        body: Column(
           children: [
             Expanded(
               child: InformationText(
                 information: _information,
                 isAnswerLoading: _isAnswerLoading,
+                isSimplifying: _isSimplifying,
+                progressInformation: _progressInformation,
               ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
               child: InformationControls(
                 sendMessage: _ensureSendStreamMessage,
+                simplify: _simplifyText,
                 isAnswerLoading: _isAnswerLoading,
+                isSimplified: (_isSimplifying || _information.isSimplified),
               ),
             ),
           ],
         ),
+        bottomNavigationBar: BottomNavbar(entries: mainBottomNavbarEntries),
       ),
-      bottomNavigationBar: BottomNavbar(entries: mainBottomNavbarEntries),
     );
   }
 }

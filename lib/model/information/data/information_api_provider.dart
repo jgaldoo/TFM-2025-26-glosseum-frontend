@@ -3,6 +3,7 @@ import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/network_service.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_message_dto.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_session_dto.dart';
+import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'information_api_provider.g.dart';
@@ -43,5 +44,24 @@ class InformationAPI extends _$InformationAPI {
         ),
       );
     }, (json) => ChatMessageStreamResponseDTO.fromJson(json));
+  }
+
+  Future<ApiResult<Stream<InformationStreamDTO>>> simplifyStream(
+    InformationSimplificationRequestDTO informationSimplificationRequestDTO,
+  ) async {
+    final networkService = ref.read(networkServiceProvider);
+
+    return networkService.safeStreamRequest<InformationStreamDTO>(() {
+      print('Simplifying...');
+      return networkService.dio.post(
+        '/simplify_stream',
+        data: informationSimplificationRequestDTO.toJson(),
+        options: Options(
+          responseType: ResponseType.stream,
+          sendTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 30),
+        ),
+      );
+    }, (json) => InformationStreamDTO.fromJson(json));
   }
 }
