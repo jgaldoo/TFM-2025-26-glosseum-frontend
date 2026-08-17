@@ -10,5 +10,5 @@ class GlosseumColors {
   static const lightColor = Color(0xFFFFFFFC);
   static const lightGrayColor = Color(0xFFD9D9D5);
   static const lightenedPrimary = Color(0xFF5C8290);
-  static const darkenedPrimary = Color(0xFF00213D);
+  static const darkenedPrimary = Color(0xFF003348);
 }

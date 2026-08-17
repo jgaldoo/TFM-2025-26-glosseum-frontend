@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/config/navbar_entries.dart';
+import 'package:glosseum_frontend/core/database/daos/chat_message_dao.dart';
+import 'package:glosseum_frontend/core/database/daos/chat_session_dao.dart';
+import 'package:glosseum_frontend/core/database/daos/information_dao.dart';
 import 'package:glosseum_frontend/core/enums/api_error_type.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
+import 'package:glosseum_frontend/core/providers/database_providers/glosseum_database_provider.dart';
 import 'package:glosseum_frontend/core/widgets/grabbable_panel/error_grabbable_panel.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/top_navbar.dart';
@@ -46,6 +50,10 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
 
     simplificationResult.when(
       success: (informationStreamDTOGenerator, statusCode, message) async {
+        final InformationDAO informationDAO = ref
+            .watch(glosseumDatabaseProvider)
+            .informationDAO;
+
         setState(() {
           _isSimplifying = true;
         });
@@ -70,12 +78,17 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
           _isSimplifying = false;
           _information = _information.copyWith(isSimplified: true);
         });
+        await informationDAO.updateInformation(_information);
       },
       error: _onError,
     );
   }
 
   Future<void> _createSession(BuildContext context, WidgetRef ref) async {
+    final ChatSessionDAO chatSessionDAO = ref
+        .watch(glosseumDatabaseProvider)
+        .chatSessionDAO;
+
     final ApiResult<ChatSessionResponseDTO> sessionResult = await ref
         .read(informationAPIProvider.notifier)
         .createSession(ChatSessionRequestDTO(document: _information.content));
@@ -83,12 +96,12 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
     if (!context.mounted) return;
 
     sessionResult.when(
-      success: (sessionDTO, statusCode, message) {
+      success: (sessionDTO, statusCode, message) async {
+        final ChatSession chatSession = ChatSession.fromDTO(sessionDTO);
         setState(() {
-          _information = _information.copyWith(
-            chatSession: ChatSession.fromDTO(sessionDTO),
-          );
+          _information = _information.copyWith(chatSession: chatSession);
         });
+        await chatSessionDAO.insertChatSession(chatSession, _information.id);
       },
       error: _onError,
     );
@@ -100,13 +113,19 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
     int statusCode,
     String message,
   ) async {
+    final ChatMessageDAO chatMessageDAO = ref
+        .watch(glosseumDatabaseProvider)
+        .chatMessageDAO;
+
+    late ChatMessage receivedMessage;
+
     await for (final messageStreamDTO in messageStreamDTOGenerator) {
       debugPrint(
         'STREAM EVENT: ${messageStreamDTO.stream} | ${messageStreamDTO.content}',
       );
       switch (messageStreamDTO.stream) {
         case StreamEnum.start:
-          final receivedMessage = ChatMessage.fromStreamDTO(messageStreamDTO);
+          receivedMessage = ChatMessage.fromStreamDTO(messageStreamDTO);
 
           setState(() {
             _information = _information.copyWith(
@@ -123,7 +142,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
         case StreamEnum.chunk:
           final history = _information.chatSession!.history;
 
-          final updatedMessage = history.last.appendContent(
+          final receivedMessage = history.last.appendContent(
             messageStreamDTO.content ?? '',
           );
 
@@ -132,7 +151,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
               chatSession: _information.chatSession!.copyWith(
                 history: [
                   ...history.sublist(0, history.length - 1),
-                  updatedMessage,
+                  receivedMessage,
                 ],
               ),
             );
@@ -142,14 +161,24 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
           setState(() {
             _isAnswerLoading = false;
           });
+          await chatMessageDAO.insertChatMessage(
+            receivedMessage,
+            _information.chatSession!.id,
+          );
       }
     }
 
-    // Optional: handle a stream that ends without an explicit `end` event.
+    // Handle a stream that ends without an explicit `end` event.
     if (mounted) {
       setState(() {
         _isAnswerLoading = false;
       });
+      if (receivedMessage.content.isNotEmpty) {
+        await chatMessageDAO.insertChatMessage(
+          receivedMessage,
+          _information.chatSession!.id,
+        );
+      }
     }
   }
 
@@ -172,23 +201,31 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
     bool updateHistory,
   ) async {
     if (updateHistory) {
+      final ChatMessageDAO chatMessageDAO = ref
+          .watch(glosseumDatabaseProvider)
+          .chatMessageDAO;
+
+      final ChatMessage userMessage = ChatMessage.fromUser(content: message);
+
       setState(() {
         _information = _information.copyWith(
           chatSession: _information.chatSession!.copyWith(
-            history: [
-              ..._information.chatSession!.history,
-              ChatMessage.fromUser(content: message),
-            ],
+            history: [..._information.chatSession!.history, userMessage],
           ),
         );
       });
+
+      await chatMessageDAO.insertChatMessage(
+        userMessage,
+        _information.chatSession!.id,
+      );
     }
 
     return ref
         .read(informationAPIProvider.notifier)
         .chatStream(
           ChatMessageRequestDTO(
-            sessionId: _information.chatSession!.sessionId,
+            sessionId: _information.chatSession!.id,
             message: message,
           ),
         );
@@ -259,7 +296,12 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
   @override
   void initState() {
     super.initState();
-    _information = widget.information;
+    _information = widget.information.copyWith(lastAccess: DateTime.now());
+
+    ref
+        .read(glosseumDatabaseProvider)
+        .informationDAO
+        .updateLastAccess(_information);
   }
 
   @override

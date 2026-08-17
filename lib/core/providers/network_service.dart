@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:glosseum_frontend/core/enums/api_error_type.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/dio_provider.dart';
@@ -32,11 +33,11 @@ class NetworkService {
     T Function(dynamic) fromJson,
   ) async {
     try {
-      print("safeRequest entered");
+      debugPrint('safeRequest entered');
 
-      print("checking status...");
+      debugPrint('checking status...');
       await checkStatus();
-      print('status checked');
+      debugPrint('status checked');
 
       final response = await call();
 
@@ -69,11 +70,11 @@ class NetworkService {
     T Function(dynamic) fromJson,
   ) async {
     try {
-      print("safeStreamRequest entered");
+      debugPrint('safeStreamRequest entered');
 
-      print("checking status...");
+      debugPrint('checking status...');
       await checkStatus();
-      print('status checked');
+      debugPrint('status checked');
 
       final response = await call();
 
