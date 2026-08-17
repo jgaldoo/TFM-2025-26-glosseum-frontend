@@ -18,10 +18,8 @@ abstract class TechnicismDTO with _$TechnicismDTO {
 
 @freezed
 abstract class TechnicismOccurrenceDTO with _$TechnicismOccurrenceDTO {
-  const factory TechnicismOccurrenceDTO({
-    required String form,
-    required int position,
-  }) = _TechnicismOccurrenceDTO;
+  const factory TechnicismOccurrenceDTO({required String form}) =
+      _TechnicismOccurrenceDTO;
 
   factory TechnicismOccurrenceDTO.fromJson(Map<String, dynamic> json) =>
       _$TechnicismOccurrenceDTOFromJson(json);

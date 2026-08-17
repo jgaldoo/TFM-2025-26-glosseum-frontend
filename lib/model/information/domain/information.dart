@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:glosseum_frontend/core/utils/uuid_generator_utils.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/stream_enum.dart';
 import 'package:glosseum_frontend/model/information/data/information_type_enum.dart';
@@ -15,10 +16,12 @@ abstract class Information with _$Information {
   const Information._();
 
   const factory Information({
+    required String id,
     required String title,
     required String content,
     required InformationTypeEnum informationType,
     required bool isSimplified,
+    required DateTime lastAccess,
     @Default([]) List<Technicism>? technicisms,
     @Default(null) ChatSession? chatSession,
   }) = _Information;
@@ -27,11 +30,13 @@ abstract class Information with _$Information {
       _$InformationFromJson(json);
 
   factory Information.fromDTO(InformationDTO infoDTO) => Information(
+    id: newUUID(),
     title: infoDTO.title,
     content: infoDTO.content,
     technicisms: infoDTO.technicisms.map(Technicism.fromDTO).toList(),
     informationType: infoDTO.informationType,
     isSimplified: infoDTO.isSimplified,
+    lastAccess: DateTime.now(),
   );
 
   Information updateFromStreamDTO(InformationStreamDTO informationStreamDTO) {
@@ -47,6 +52,7 @@ abstract class Information with _$Information {
           ? informationStreamDTO.technicisms!.map(Technicism.fromDTO).toList()
           : technicisms,
       isSimplified: informationStreamDTO.isSimplified ?? isSimplified,
+      lastAccess: DateTime.now(),
     );
   }
 }

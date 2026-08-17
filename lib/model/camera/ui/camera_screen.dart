@@ -1,8 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:glosseum_frontend/core/database/daos/information_dao.dart';
 import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/camera_control_notifier.dart';
+import 'package:glosseum_frontend/core/providers/database_providers/glosseum_database_provider.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/nav_entry.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
@@ -68,7 +70,13 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
 
     transcribeResult.when(
       success: (infoDTO, statusCode, message) {
-        context.push('/information', extra: Information.fromDTO(infoDTO));
+        final InformationDAO informationDAO = ref
+            .watch(glosseumDatabaseProvider)
+            .informationDAO;
+        final Information information = Information.fromDTO(infoDTO);
+
+        informationDAO.insertInformation(information);
+        context.push('/information', extra: information);
       },
       error: (errorType, statusCode, message) {
         showModalBottomSheet(
@@ -199,7 +207,6 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
 
     return LoadingBlurOverlay(
       isLoading: _isLoading,
-      useBlur: true,
       child: Scaffold(
         body: Stack(
           fit: StackFit.expand,

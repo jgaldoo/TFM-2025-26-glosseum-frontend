@@ -28,6 +28,9 @@ dependencies:
   flutter_markdown_plus: ^1.0.12
   markdown: ^7.3.1
   simple_typing_indicator: ^1.0.1
+  drift_flutter: ^0.3.1
+  drift: ^2.34.3
+  uuid: ^4.6.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -35,6 +38,7 @@ dev_dependencies:
   riverpod_generator: ^4.0.3
   build_runner: ^2.15.0
   freezed: ^3.2.6-dev.1
+  drift_dev: ^2.34.0
 
 flutter:
   uses-material-design: true

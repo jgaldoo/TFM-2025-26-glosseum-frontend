@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:glosseum_frontend/core/utils/uuid_generator_utils.dart';
 import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_message_dto.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/stream_enum.dart';
@@ -13,6 +14,7 @@ abstract class ChatMessage with _$ChatMessage {
   const ChatMessage._();
 
   const factory ChatMessage({
+    required String id,
     required ChatRoleEnum role,
     required String content,
     required DateTime timestamp,
@@ -20,6 +22,7 @@ abstract class ChatMessage with _$ChatMessage {
   }) = _ChatMessage;
 
   factory ChatMessage.fromUser({required String content}) => ChatMessage(
+    id: newUUID(),
     role: ChatRoleEnum.user,
     content: content,
     timestamp: DateTime.now(),
@@ -30,6 +33,7 @@ abstract class ChatMessage with _$ChatMessage {
 
   factory ChatMessage.fromDTO(ChatMessageResponseDTO chatMessageDTO) =>
       ChatMessage(
+        id: newUUID(),
         role: ChatRoleEnum.fromString(chatMessageDTO.role),
         content: chatMessageDTO.content,
         timestamp: chatMessageDTO.timestamp,
@@ -57,6 +61,7 @@ abstract class ChatMessage with _$ChatMessage {
     }
 
     return ChatMessage(
+      id: newUUID(),
       role: ChatRoleEnum.fromString(chatStreamMessageDTO.role!),
       content: chatStreamMessageDTO.content ?? '',
       timestamp: chatStreamMessageDTO.timestamp!,

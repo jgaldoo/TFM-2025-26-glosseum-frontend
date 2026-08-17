@@ -9,7 +9,7 @@ part 'chat_session.g.dart';
 @freezed
 abstract class ChatSession with _$ChatSession {
   const factory ChatSession({
-    required String sessionId,
+    required String id,
     @Default([]) List<ChatMessage> history,
   }) = _ChatSession;
 
@@ -18,7 +18,7 @@ abstract class ChatSession with _$ChatSession {
 
   factory ChatSession.fromDTO(ChatSessionResponseDTO chatSessionDTO) =>
       ChatSession(
-        sessionId: chatSessionDTO.sessionId,
+        id: chatSessionDTO.sessionId,
         history: chatSessionDTO.history != null
             ? chatSessionDTO.history!
                   .map((messageDTO) => ChatMessage.fromDTO(messageDTO))
