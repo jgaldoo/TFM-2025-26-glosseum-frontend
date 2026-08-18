@@ -105,7 +105,6 @@ class _InformationTextState extends State<InformationText> {
       recognizer.dispose();
     }
     super.dispose();
-    super.dispose();
   }
 
   List<Widget> _buildChat(BuildContext context) {
@@ -137,130 +136,125 @@ class _InformationTextState extends State<InformationText> {
         children: [
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 7.5),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: TrackScrollbar(
                 controller: _scrollController,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 22.5),
-                  child: CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 15),
-                                child: Text(
-                                  informationTypeText(
-                                    widget.information.informationType,
-                                    widget.information.isSimplified,
-                                  ),
-                                  textAlign: TextAlign.right,
-                                  style: theme.textTheme.labelLarge?.copyWith(
-                                    color: theme.hintColor,
-                                  ),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              child: Text(
+                                informationTypeText(
+                                  widget.information.informationType,
+                                  widget.information.isSimplified,
+                                ),
+                                textAlign: TextAlign.right,
+                                style: theme.textTheme.labelLarge?.copyWith(
+                                  color: theme.hintColor,
                                 ),
                               ),
                             ),
+                          ),
 
-                            Text(
-                              widget.information.title,
-                              textAlign: TextAlign.left,
-                              style: theme.textTheme.headlineMedium,
-                            ),
-                            Divider(
-                              height: 20,
-                              thickness: 3,
-                              indent: 0,
-                              endIndent: 0,
-                              color: theme.primaryColor,
-                            ),
+                          Text(
+                            widget.information.title,
+                            textAlign: TextAlign.left,
+                            style: theme.textTheme.headlineMedium,
+                          ),
+                          Divider(
+                            height: 20,
+                            thickness: 3,
+                            indent: 0,
+                            endIndent: 0,
+                            color: theme.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: LoadingBlurOverlay(
+                        isLoading:
+                            widget.isSimplifying &&
+                            widget.information.content.isEmpty,
+                        useBlur: false,
+                        useDimming: false,
+                        child: Column(
+                          children: [
+                            if (!widget.isSimplifying ||
+                                widget.information.content.isNotEmpty) ...[
+                              MarkdownBody(
+                                data: widget.information.content,
+                                inlineSyntaxes: [TechnicismInlineSyntax()],
+                                builders: {
+                                  'technicism': TechnicismMarkdownBuilder(
+                                    onTap: (text) {
+                                      // Find the corresponding special entity.
+                                      final technicism = _findTechnicism(text);
+
+                                      if (technicism != null) {
+                                        _showDefinition(technicism);
+                                      }
+                                    },
+                                  ),
+                                },
+                              ),
+
+                              if (widget.isSimplifying)
+                                Padding(
+                                  padding: EdgeInsetsGeometry.symmetric(
+                                    vertical: 10,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      if (widget.progressInformation != null)
+                                        Padding(
+                                          padding:
+                                              EdgeInsetsGeometry.directional(
+                                                end: 10,
+                                              ),
+                                          child: Text(
+                                            widget.progressInformation!,
+                                            style: theme.textTheme.labelMedium
+                                                ?.copyWith(
+                                                  color: theme.hintColor,
+                                                ),
+                                          ),
+                                        ),
+                                      SimpleTypingIndicator(),
+                                    ],
+                                  ),
+                                ),
+
+                              if (!widget.isSimplifying) ...[
+                                ..._buildChat(context),
+                                if (widget.isAnswerLoading)
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.all(10),
+                                      child: CircularProgressIndicator(
+                                        color: theme.primaryColor,
+                                        backgroundColor:
+                                            theme.scaffoldBackgroundColor,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ],
                           ],
                         ),
                       ),
-
-                      SliverFillRemaining(
-                        hasScrollBody: false,
-                        child: LoadingBlurOverlay(
-                          isLoading:
-                              widget.isSimplifying &&
-                              widget.information.content.isEmpty,
-                          useBlur: false,
-                          useDimming: false,
-                          child: Column(
-                            children: [
-                              if (!widget.isSimplifying ||
-                                  widget.information.content.isNotEmpty) ...[
-                                MarkdownBody(
-                                  data: widget.information.content,
-                                  inlineSyntaxes: [TechnicismInlineSyntax()],
-                                  builders: {
-                                    'technicism': TechnicismMarkdownBuilder(
-                                      onTap: (text) {
-                                        // Find the corresponding special entity.
-                                        final technicism = _findTechnicism(
-                                          text,
-                                        );
-
-                                        if (technicism != null) {
-                                          _showDefinition(technicism);
-                                        }
-                                      },
-                                    ),
-                                  },
-                                ),
-
-                                if (widget.isSimplifying)
-                                  Padding(
-                                    padding: EdgeInsetsGeometry.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        if (widget.progressInformation != null)
-                                          Padding(
-                                            padding:
-                                                EdgeInsetsGeometry.directional(
-                                                  end: 10,
-                                                ),
-                                            child: Text(
-                                              widget.progressInformation!,
-                                              style: theme.textTheme.labelMedium
-                                                  ?.copyWith(
-                                                    color: theme.hintColor,
-                                                  ),
-                                            ),
-                                          ),
-                                        SimpleTypingIndicator(),
-                                      ],
-                                    ),
-                                  ),
-
-                                if (!widget.isSimplifying) ...[
-                                  ..._buildChat(context),
-                                  if (widget.isAnswerLoading)
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: EdgeInsetsGeometry.all(10),
-                                        child: CircularProgressIndicator(
-                                          color: theme.primaryColor,
-                                          backgroundColor:
-                                              theme.scaffoldBackgroundColor,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

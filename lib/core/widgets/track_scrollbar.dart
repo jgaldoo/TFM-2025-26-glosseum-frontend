@@ -5,6 +5,7 @@ class TrackScrollbar extends StatefulWidget {
   // Scrollbar parameters
   final Widget child;
   final ScrollController? controller;
+  final Color? thumbColor;
   final bool? thumbVisibility;
   final bool? trackVisibility;
   final double? thickness;
@@ -17,19 +18,24 @@ class TrackScrollbar extends StatefulWidget {
   final Color? trackColor;
   final double? trackThickness;
 
+  // Padding
+  final double paddingInset;
+
   const TrackScrollbar({
     super.key,
     required this.child,
     this.controller,
-    this.thumbVisibility,
-    this.trackVisibility,
-    this.thickness,
-    this.radius,
+    this.thumbVisibility = true,
+    this.trackVisibility = true,
+    this.thickness = 8.0,
+    this.radius = const Radius.circular(8.0),
     this.interactive,
     this.notificationPredicate,
     this.scrollbarOrientation,
+    this.thumbColor,
     this.trackColor,
     this.trackThickness,
+    this.paddingInset = -22.5,
   });
 
   @override
@@ -41,10 +47,20 @@ class _TrackScrollbarState extends State<TrackScrollbar> {
   bool _showTrack = false;
 
   void _updateShowTrack() {
-    final shouldShow =
-        _usedController != null &&
-        _usedController!.hasClients &&
-        _usedController!.position.maxScrollExtent > 0;
+    if (_usedController == null || !_usedController!.hasClients) {
+      return;
+    }
+
+    if (!_usedController!.position.hasContentDimensions) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _updateShowTrack();
+        }
+      });
+      return;
+    }
+
+    final shouldShow = _usedController!.position.maxScrollExtent > 0;
 
     if (shouldShow != _showTrack) {
       setState(() {
@@ -91,46 +107,45 @@ class _TrackScrollbarState extends State<TrackScrollbar> {
     final Color? usedTrackColor = widget.trackColor ?? trackTheme.trackColor;
     final double usedTrackThickness =
         widget.trackThickness ?? trackTheme.trackThickness;
+    final Color? usedThumbColor =
+        widget.thumbColor ?? theme.scrollbarTheme.thumbColor?.resolve({});
     final double usedThickness =
         (widget.thickness ?? theme.scrollbarTheme.thickness?.resolve({})) ??
         8.0;
 
+    final double trackInset = -(usedThickness - usedTrackThickness) * 0.5;
+
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         if (_showTrack)
-          Positioned.fill(
+          Positioned(
+            top: 0,
+            bottom: 0,
+            right: widget.paddingInset - trackInset,
             child: Align(
               alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  0,
-                  0,
-                  (usedThickness - usedTrackThickness) * 0.5,
-                  0,
-                ),
-                child: Container(
-                  width: usedTrackThickness,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: usedTrackColor,
-                    borderRadius: BorderRadius.circular(
-                      usedTrackThickness * 0.5,
-                    ),
-                  ),
+              child: Container(
+                width: usedTrackThickness,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: usedTrackColor,
+                  borderRadius: BorderRadius.circular(usedTrackThickness * 0.5),
                 ),
               ),
             ),
           ),
 
-        Scrollbar(
+        RawScrollbar(
           controller: _usedController,
+          thumbColor: usedThumbColor,
           thumbVisibility: widget.thumbVisibility,
           trackVisibility: false,
           thickness: widget.thickness,
           radius: widget.radius,
           interactive: widget.interactive,
-          notificationPredicate: widget.notificationPredicate,
           scrollbarOrientation: widget.scrollbarOrientation,
+          padding: EdgeInsets.only(right: widget.paddingInset),
           child: widget.child,
         ),
       ],
