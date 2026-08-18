@@ -76,19 +76,19 @@ class InformationDAO extends DatabaseAccessor<GlosseumDatabase>
             (tableInformation) => tableInformation.id.equals(information.id),
           ))
           .write(_toUpdateCompanion(information));
+
+      await db.technicismDAO.deleteRelatedTechnicisms(
+        information.id,
+        exceptIds: (information.technicisms ?? [])
+            .map((technicism) => technicism.id)
+            .toList(),
+      );
+
+      return await db.technicismDAO.insertTechnicisms(
+        information.technicisms ?? [],
+        information.id,
+      );
     });
-
-    await db.technicismDAO.deleteRelatedTechnicisms(
-      information.id,
-      exceptIds: (information.technicisms ?? [])
-          .map((technicism) => technicism.id)
-          .toList(),
-    );
-
-    return await db.technicismDAO.insertTechnicisms(
-      information.technicisms ?? [],
-      information.id,
-    );
   }
 
   Future<void> updateLastAccess(Information information) async {
@@ -112,5 +112,31 @@ class InformationDAO extends DatabaseAccessor<GlosseumDatabase>
           ? null
           : await _fromData(informationTableData);
     });
+  }
+
+  Future<List<Information>> selectLatestInformation(
+    int limit, {
+    int offset = 0,
+  }) async {
+    return await transaction(() async {
+      final List<InformationTableData> informationTableDataList =
+          await (select(informationTable)
+                ..orderBy([
+                  (tableInformation) =>
+                      OrderingTerm.desc(tableInformation.lastAccess),
+                ])
+                ..limit(limit, offset: offset))
+              .get();
+
+      return await Future.wait(
+        informationTableDataList.map(
+          (informationTableData) async => await _fromData(informationTableData),
+        ),
+      );
+    });
+  }
+
+  Future<int> count() async {
+    return await informationTable.count().getSingle();
   }
 }

@@ -63,7 +63,7 @@ class TechnicismDefinitionDAO extends DatabaseAccessor<GlosseumDatabase>
     final technicismDefinitionTableDataList =
         await (select(technicismDefinitionTable)..where(
               (technicismDefinition) =>
-                  technicismDefinition.id.equals(technicismId),
+                  technicismDefinition.technicismId.equals(technicismId),
             ))
             .get();
 

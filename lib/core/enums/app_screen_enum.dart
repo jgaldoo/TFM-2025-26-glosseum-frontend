@@ -3,7 +3,6 @@ enum AppScreenEnum {
   qrScanner,
   camera,
   settings,
-  browser,
   information;
 
   String get route {
@@ -16,8 +15,6 @@ enum AppScreenEnum {
         return '/camera';
       case AppScreenEnum.settings:
         return '/settings';
-      case AppScreenEnum.browser:
-        return '/browser';
       case AppScreenEnum.information:
         return '/information';
     }

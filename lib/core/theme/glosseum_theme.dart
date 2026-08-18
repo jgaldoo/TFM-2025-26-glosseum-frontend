@@ -87,12 +87,12 @@ class GlosseumTheme {
       ),
       labelLarge: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 16,
+        fontSize: 18,
         color: GlosseumColors.darkColor,
       ),
       labelMedium: TextStyle(
         fontFamily: _fontFamily,
-        fontSize: 14,
+        fontSize: 15,
         color: GlosseumColors.darkColor,
       ),
       labelSmall: TextStyle(
@@ -171,6 +171,10 @@ class GlosseumTheme {
       thumbVisibility: WidgetStateProperty.all(true),
       thumbColor: WidgetStateProperty.all(GlosseumColors.secondary),
       trackVisibility: WidgetStateProperty.all(false),
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: GlosseumColors.primary,
+      refreshBackgroundColor: GlosseumColors.lightColor,
     ),
     extensions: [
       GlosseumCameraInterfaceTheme(

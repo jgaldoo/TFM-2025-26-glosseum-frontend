@@ -37,6 +37,45 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
   bool _isSimplifying = false;
   String? _progressInformation;
 
+  Future<void> _printDB() async {
+    final rowsInfo = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).informationTable)
+        .get();
+
+    final rowsTech = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).technicismTable)
+        .get();
+
+    final rowsTechDef = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).technicismDefinitionTable)
+        .get();
+
+    final rowsTechOcc = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).technicismOccurrenceTable)
+        .get();
+
+    final rowsChatSession = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).chatSessionTable)
+        .get();
+
+    final rowsChatMessage = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).chatMessageTable)
+        .get();
+
+    debugPrint('In Code: ${_information.technicisms.toString()}');
+    debugPrint(
+      'In DB: ${(await ref.watch(glosseumDatabaseProvider).informationDAO.selectInformationById(_information.id))?.technicisms.toString()}',
+    );
+
+    return;
+  }
+
   Future<void> _simplifyText(BuildContext context, WidgetRef ref) async {
     final ApiResult<Stream<InformationStreamDTO>> simplificationResult =
         await ref
@@ -162,7 +201,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
             _isAnswerLoading = false;
           });
           await chatMessageDAO.insertChatMessage(
-            receivedMessage,
+            _information.chatSession!.history.last,
             _information.chatSession!.id,
           );
       }
@@ -312,7 +351,10 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        appBar: TopNavbar(rightEntries: mainTopRightNavbarEntries),
+        appBar: TopNavbar(
+          leftEntries: mainTopLeftNavbarEntries,
+          rightEntries: mainTopRightNavbarEntries,
+        ),
         body: Column(
           children: [
             Expanded(

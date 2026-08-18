@@ -45,15 +45,12 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Padding(
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 7.5),
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
           child: TrackScrollbar(
             controller: controller,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22.5),
-              child: SingleChildScrollView(
-                controller: controller,
-                child: content,
-              ),
+            child: SingleChildScrollView(
+              controller: controller,
+              child: content,
             ),
           ),
         );

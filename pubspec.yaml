@@ -47,6 +47,7 @@ flutter:
     - 'assets/icons/arrow_right.svg'
     - 'assets/icons/camera.svg'
     - 'assets/icons/check.svg'
+    - 'assets/icons/clock.svg'
     - 'assets/icons/cross.svg'
     - 'assets/icons/error_icon.svg'
     - 'assets/icons/identify_icon.svg'

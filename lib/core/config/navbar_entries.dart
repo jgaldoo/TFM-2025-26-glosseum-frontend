@@ -12,10 +12,6 @@ final mainTopLeftNavbarEntries = [
 
 final mainTopRightNavbarEntries = [
   NavEntry(
-    icon: GlosseumIcons.search,
-    onTap: (context, _) => context.push(AppScreenEnum.browser.route),
-  ),
-  NavEntry(
     icon: GlosseumIcons.settings,
     onTap: (context, _) => context.push(AppScreenEnum.settings.route),
   ),
