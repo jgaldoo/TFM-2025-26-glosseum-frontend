@@ -11,7 +11,9 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class InformationHistory extends ConsumerStatefulWidget {
-  const InformationHistory({super.key});
+  final bool refresh;
+
+  const InformationHistory({super.key, required this.refresh});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -23,11 +25,11 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
   final List<Information> _informationHistory = [];
   bool _isLoading = false;
 
-  late final int _count;
+  late int _count;
   final int _elementsPerPage = 20;
   int _pageNumber = 1;
 
-  Future<void> _fetchInformationHistory() async {
+  Future<void> _fetchInformationHistory({bool clearCurrent = false}) async {
     final InformationDAO informationDAO = ref
         .watch(glosseumDatabaseProvider)
         .informationDAO;
@@ -35,6 +37,20 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
     setState(() {
       _isLoading = true;
     });
+
+    if (clearCurrent) {
+      _pageNumber = 1;
+      _informationHistory.clear();
+    }
+
+    _count = await informationDAO.count();
+
+    if (_count == 0) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
 
     _informationHistory.addAll(
       await informationDAO.selectLatestInformation(
@@ -144,6 +160,16 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
   }
 
   @override
+  void didUpdateWidget(covariant InformationHistory oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.refresh != oldWidget.refresh) {
+      _fetchInformationHistory(clearCurrent: true);
+      setState(() {});
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
 
@@ -166,7 +192,7 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -204,6 +230,19 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
                           ],
                           if (_isLoading && _informationHistory.isNotEmpty)
                             _buildLoadingItem(),
+
+                          if (!_isLoading && _informationHistory.isEmpty)
+                            Padding(
+                              padding: EdgeInsetsGeometry.directional(top: 20),
+                              child: Text(
+                                'No se ha encontrado ningún resultado. Transcribe'
+                                ' información para visitar aquí la información '
+                                'encontrada.',
+                                style: theme.textTheme.labelLarge?.copyWith(
+                                  color: theme.hintColor,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),

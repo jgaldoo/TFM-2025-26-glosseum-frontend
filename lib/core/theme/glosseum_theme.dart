@@ -54,6 +54,8 @@ class GlosseumTheme {
         fontSize: 30,
         fontWeight: FontWeight.w500,
         color: GlosseumColors.darkColor,
+        height: 1.5,
+        leadingDistribution: TextLeadingDistribution.even,
       ),
       titleLarge: TextStyle(
         fontFamily: _fontFamily,
@@ -104,7 +106,7 @@ class GlosseumTheme {
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: GlosseumColors.primary,
       indicatorColor: GlosseumColors.secondary,
-      labelTextStyle: WidgetStateProperty.all(
+      labelTextStyle: WidgetStatePropertyAll(
         const TextStyle(
           fontFamily: _fontFamily,
           fontSize: 16,
@@ -112,6 +114,7 @@ class GlosseumTheme {
           color: GlosseumColors.lightColor,
         ),
       ),
+      iconTheme: WidgetStatePropertyAll(const IconThemeData(size: 44)),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
@@ -166,11 +169,11 @@ class GlosseumTheme {
       ),
     ),
     scrollbarTheme: ScrollbarThemeData(
-      thickness: WidgetStateProperty.all(8),
+      thickness: WidgetStatePropertyAll(8),
       radius: Radius.circular(8),
-      thumbVisibility: WidgetStateProperty.all(true),
-      thumbColor: WidgetStateProperty.all(GlosseumColors.secondary),
-      trackVisibility: WidgetStateProperty.all(false),
+      thumbVisibility: WidgetStatePropertyAll(true),
+      thumbColor: WidgetStatePropertyAll(GlosseumColors.secondary),
+      trackVisibility: WidgetStatePropertyAll(false),
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: GlosseumColors.primary,

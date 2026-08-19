@@ -22,12 +22,18 @@ class GrabbablePanel extends ConsumerStatefulWidget {
   final String? title;
   final List<PanelTab>? tabs;
   final Widget? innerContent;
+  final Widget? bottomNavigationBar;
 
-  const GrabbablePanel({super.key, this.title, this.tabs, this.innerContent})
-    : assert(
-        (innerContent != null) != (tabs != null),
-        'Provide either content or tabs.',
-      );
+  const GrabbablePanel({
+    super.key,
+    this.title,
+    this.tabs,
+    this.innerContent,
+    this.bottomNavigationBar,
+  }) : assert(
+         (innerContent != null) != (tabs != null),
+         'Provide either content or tabs.',
+       );
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GrabbablePanelState();
@@ -91,9 +97,9 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
       ),
       child: Column(
         children: [
-          // Handle
           Stack(
             children: [
+              // Handle
               Align(
                 alignment: Alignment.topCenter,
                 child: GestureDetector(
@@ -124,14 +130,20 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
 
               // Close button
               Positioned(
-                right: 5,
-                top: 5,
+                right: 15,
+                top: 15,
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
-                  child: GlosseumIcon(
-                    GlosseumIcons.cross,
-                    size: 60,
-                    color: theme.colorScheme.onSurface,
+                  child: SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: Align(
+                      child: GlosseumIcon(
+                        GlosseumIcons.cross,
+                        size: 25,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -174,6 +186,8 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
             ),
           ] else
             Expanded(child: _buildContent(widget.innerContent, null)),
+
+          if (widget.bottomNavigationBar != null) widget.bottomNavigationBar!,
         ],
       ),
     );
