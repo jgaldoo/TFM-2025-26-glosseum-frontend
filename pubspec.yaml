@@ -69,33 +69,8 @@ flutter:
 fonts:
   - family: 'Merriweather Sans'
     fonts:
-      - asset: fonts/static/MerriweatherSans-ExtraBoldItalic.ttf
+      - asset: fonts/MerriweatherSans-Italic-VariableFont_wgth.ttf
         style: italic
         weight: 800
-      - asset: fonts/static/MerriweatherSans-ExtraBold.ttf
-        weight: 800
-      - asset: fonts/static/MerriweatherSans-BoldItalic.ttf
-        style: italic
-        weight: 700
-      - asset: fonts/static/MerriweatherSans-Bold.ttf
-        weight: 700
-      - asset: fonts/static/MerriweatherSans-SemiBoldItalic.ttf
-        style: italic
-        weight: 600
-      - asset: fonts/static/MerriweatherSans-SemiBold.ttf
-        weight: 600
-      - asset: fonts/static/MerriweatherSans-MediumItalic.ttf
-        style: italic
-        weight: 500
-      - asset: fonts/static/MerriweatherSans-Medium.ttf
-        weight: 500
-      - asset: fonts/static/MerriweatherSans-Italic.ttf
-        style: italic
-        weight: 400
-      - asset: fonts/static/MerriweatherSans-Regular.ttf
-        weight: 400
-      - asset: fonts/static/MerriweatherSans-LightItalic.ttf
-        style: italic
-        weight: 300
-      - asset: fonts/static/MerriweatherSans-Light.ttf
-        weight: 300
+      - asset: fonts/MerriweatherSans-VariableFont_wgth.ttf
+      - asset: fonts/OFL.txt

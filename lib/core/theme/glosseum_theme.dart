@@ -54,8 +54,6 @@ class GlosseumTheme {
         fontSize: 30,
         fontWeight: FontWeight.w500,
         color: GlosseumColors.darkColor,
-        height: 1.5,
-        leadingDistribution: TextLeadingDistribution.even,
       ),
       titleLarge: TextStyle(
         fontFamily: _fontFamily,
