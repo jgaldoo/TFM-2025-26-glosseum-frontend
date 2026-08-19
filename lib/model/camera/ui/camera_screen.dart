@@ -115,8 +115,15 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
                 icon: GlosseumIcons.identify,
                 label: 'Identificar',
                 onTap: (context, ref) async => {
-                  // await petición a API
-                  // context.push(AppScreenEnum.information, info)
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (_) {
+                      return ErrorGrabbablePanel(
+                        message:
+                            'Aún no se ha implementado esta funcionalidad.',
+                      );
+                    },
+                  ),
                 },
               ),
               NavEntry(

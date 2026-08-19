@@ -20,7 +20,8 @@ class ErrorGrabbablePanel extends StatelessWidget {
       builder: (context, constraints) {
         final size = constraints.biggest;
 
-        final iconSize = size.width * 0.4;
+        final circleSize = size.width * 0.4;
+        final iconSize = circleSize * 0.6;
 
         return GrabbablePanel(
           innerContent: Padding(
@@ -37,19 +38,19 @@ class ErrorGrabbablePanel extends StatelessWidget {
                       children: [
                         Center(
                           child: Container(
-                            width: iconSize,
-                            height: iconSize,
+                            width: circleSize,
+                            height: circleSize,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: theme.primaryColor,
                             ),
-                          ),
-                        ),
-                        Center(
-                          child: GlosseumIcon(
-                            GlosseumIcons.cross,
-                            size: iconSize,
-                            color: theme.iconTheme.color,
+                            child: Center(
+                              child: GlosseumIcon(
+                                GlosseumIcons.cross,
+                                size: iconSize,
+                                color: theme.iconTheme.color,
+                              ),
+                            ),
                           ),
                         ),
                       ],
