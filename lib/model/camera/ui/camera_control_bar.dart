@@ -6,9 +6,12 @@ import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
 import 'package:glosseum_frontend/model/camera/ui/camera_button.dart';
 
 class CameraControlBar extends ConsumerWidget {
+  final double _height = 100;
+
   final CameraModeEnum cameraMode;
   final VoidCallback onScreenChange;
   final VoidCallback onActionPressed;
+
   const CameraControlBar({
     super.key,
     required this.cameraMode,
@@ -19,44 +22,44 @@ class CameraControlBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isCamera = cameraMode == CameraModeEnum.camera;
+    final double subButtonSize = 60;
+    final double mainButtonSize = 80;
 
     return SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          height: 100,
-          child: Row(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child : CameraButton(
-                      onPressed: onScreenChange,
-                      icon: isCamera
-                          ? GlosseumIcons.qr_code_scanner
-                          : GlosseumIcons.camera,
-                      primary: false,
-                      size: 60,
+      child: SizedBox(
+        width: double.infinity,
+        height: _height,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  left: constraints.maxWidth * 0.2 - subButtonSize * 0.5,
+                  child: CameraButton(
+                    onPressed: onScreenChange,
+                    icon: isCamera
+                        ? GlosseumIcons.qr_code_scanner
+                        : GlosseumIcons.camera,
+                    primary: false,
+                    size: subButtonSize,
+                  ),
+                ),
+                if (isCamera) ...[
+                  Positioned(
+                    left: constraints.maxWidth * 0.5 - mainButtonSize * 0.5,
+                    child: CameraButton(
+                      onPressed: onActionPressed,
+                      icon: GlosseumIcons.camera,
+                      size: mainButtonSize,
                     ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: CameraButton(
-                    onPressed: onActionPressed,
-                    icon: isCamera
-                        ? GlosseumIcons.camera
-                        : GlosseumIcons.qr_code_scanner,
-                    size: 80,
-                  ),
-                ),
-              ),
-              const Spacer()
-            ],
-          ),
+                ],
+              ],
+            );
+          },
         ),
+      ),
     );
   }
-
 }

@@ -1,11 +1,13 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:glosseum_frontend/core/config/route_observer.dart';
 import 'package:glosseum_frontend/core/database/daos/information_dao.dart';
 import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/camera_control_notifier.dart';
 import 'package:glosseum_frontend/core/providers/database_providers/glosseum_database_provider.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
+import 'package:glosseum_frontend/core/widgets/grabbable_panel/grabbable_panel.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/nav_entry.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
 import 'package:glosseum_frontend/core/widgets/grabbable_panel/error_grabbable_panel.dart';
@@ -36,11 +38,13 @@ class CameraScreen extends ConsumerStatefulWidget {
 }
 
 class _CameraScreenState extends ConsumerState<CameraScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, RouteAware {
   late CameraModeEnum _cameraMode;
   late CameraModeEnum _lastCameraMode;
   bool _cameraPaused = false;
   bool _isLoading = false;
+  bool _isRouteActive = true;
+  Rect? _scanArea;
 
   void _transcribe(BuildContext context, WidgetRef ref) async {
     final state = ref.watch(cameraProvider);
@@ -102,6 +106,23 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     });
   }
 
+  Future<bool?> _qrValueGrabbablePanel(
+    BuildContext context,
+    String value,
+  ) async {
+    final theme = Theme.of(context);
+
+    return await showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return GrabbablePanel(
+          title: 'Contenido del QR',
+          innerContent: Text(value, style: theme.textTheme.titleSmall),
+        );
+      },
+    );
+  }
+
   Widget? _screenBottomNavbar() {
     return _cameraMode == CameraModeEnum.photo
         ? BottomNavbar(
@@ -138,11 +159,17 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
         : SizedBox.shrink();
   }
 
-  void _toggleMode() {
+  Future<void> _toggleMode() async {
     // Ensure changes only happen between camera and qrScanner modes
     if (_cameraMode != CameraModeEnum.camera &&
         _cameraMode != CameraModeEnum.qrScanner) {
       return;
+    }
+
+    if (_cameraMode == CameraModeEnum.qrScanner) {
+      await ref.read(cameraProvider.notifier).stopScanning();
+    } else {
+      await ref.read(cameraProvider.notifier).startScanning();
     }
 
     setState(() {
@@ -150,12 +177,6 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
           ? CameraModeEnum.qrScanner
           : CameraModeEnum.camera;
     });
-
-    if (_cameraMode == CameraModeEnum.camera) {
-      ref.read(cameraProvider.notifier).initCamera(false);
-    } else {
-      ref.read(cameraProvider.notifier).dispose();
-    }
   }
 
   @override
@@ -167,8 +188,22 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     WidgetsBinding.instance.addObserver(this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(cameraProvider.notifier).initCamera(true);
+      final cameraNotifier = ref.read(cameraProvider.notifier);
+      await cameraNotifier.initCamera(true);
+      if (_cameraMode == CameraModeEnum.qrScanner) {
+        await cameraNotifier.startScanning();
+      }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final modalRoute = ModalRoute.of(context);
+    if (modalRoute != null) {
+      routeObserver.subscribe(this, ModalRoute.of(context)!);
+    }
   }
 
   @override
@@ -187,6 +222,17 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       if (_cameraMode == CameraModeEnum.photo) {
         setState(() {});
       }
+    });
+
+    // Listen to the QR value to process it
+    ref.listen(cameraProvider.select((state) => state.scannedValue), (
+      _,
+      value,
+    ) async {
+      if (!_isRouteActive || value == null) return;
+
+      await _qrValueGrabbablePanel(context, value);
+      await ref.read(cameraProvider.notifier).finishProcessingScan();
     });
 
     if (!state.permissionGranted) {
@@ -223,29 +269,75 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
                   ? ref.watch(photoAttributesProvider.notifier)
                   : ref.watch(cameraAttributesProvider.notifier),
               enablePanning: true,
-              child: IndexedStack(
-                index: _cameraMode.index,
+              child: Stack(
                 children: [
-                  // CameraModeEnum.camera
-                  state.controller != null
-                      ? SizedBox.expand(child: CameraPreview(state.controller!))
-                      : const SizedBox.shrink(),
+                  if (_cameraMode == CameraModeEnum.camera ||
+                      _cameraMode == CameraModeEnum.qrScanner)
+                    state.controller != null
+                        ? LayoutBuilder(
+                            builder: (context, constraints) {
+                              final size = constraints.maxWidth * 0.75;
+                              final previewHeight = constraints.maxHeight;
+                              final previewWidth =
+                                  previewHeight /
+                                  state.controller!.value.aspectRatio;
 
-                  // CameraModeEnum.qrScanner
-                  const QrOverlay(
-                    borderRadius: 30,
-                    borderLength: 80,
-                    borderWidth: 5,
-                  ),
+                              final scanRectangle = Rect.fromCenter(
+                                center: Offset(
+                                  previewWidth / 2,
+                                  previewHeight / 2,
+                                ),
+                                width: size,
+                                height: size,
+                              );
 
-                  // CameraModeEnum.photo
-                  state.controller != null && state.pictureTaken != null
-                      ? SizedBox.expand(
-                          child: PhotoPreview(
-                            imagePath: state.pictureTaken!.path,
-                          ),
-                        )
-                      : const SizedBox.shrink(),
+                              // Normalized area
+                              _scanArea = Rect.fromLTRB(
+                                scanRectangle.left / previewWidth,
+                                scanRectangle.top / previewHeight,
+                                scanRectangle.right / previewWidth,
+                                scanRectangle.bottom / previewHeight,
+                              );
+
+                              ref
+                                  .read(cameraProvider.notifier)
+                                  .setScanArea(_scanArea);
+                              final length = size * 0.25;
+
+                              return Stack(
+                                children: [
+                                  OverflowBox(
+                                    maxWidth: double.infinity,
+                                    maxHeight: double.infinity,
+                                    child: SizedBox(
+                                      width:
+                                          constraints.maxHeight /
+                                          state.controller!.value.aspectRatio,
+                                      height: constraints.maxHeight,
+                                      child: CameraPreview(state.controller!),
+                                    ),
+                                  ),
+                                  if (_cameraMode == CameraModeEnum.qrScanner)
+                                    QrOverlay(
+                                      borderRadius: 30,
+                                      borderLength: length,
+                                      borderWidth: 5,
+                                      size: size,
+                                    ),
+                                ],
+                              );
+                            },
+                          )
+                        : const SizedBox.shrink(),
+
+                  if (_cameraMode == CameraModeEnum.photo)
+                    state.controller != null && state.pictureTaken != null
+                        ? SizedBox.expand(
+                            child: PhotoPreview(
+                              imagePath: state.pictureTaken!.path,
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                 ],
               ),
             ),
@@ -290,6 +382,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -303,13 +396,39 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
       _cameraPaused = true;
-      cameraNotifier.dispose();
+      cameraNotifier.pause();
     }
 
     // If the user moved away from the camera and is now back, reinitialize
     if (state == AppLifecycleState.resumed && _cameraPaused) {
       _cameraPaused = false;
-      cameraNotifier.initCamera(false);
+      cameraNotifier.resume();
+    }
+  }
+
+  @override
+  void didPushNext() async {
+    _isRouteActive = false;
+    final state = ref.read(cameraProvider);
+
+    if (state.isInitialized && !state.isProcessingScan) {
+      ref.read(cameraProvider.notifier).pause();
+    }
+  }
+
+  @override
+  void didPopNext() async {
+    _isRouteActive = true;
+    final state = ref.read(cameraProvider);
+
+    if (!state.isInitialized || state.isProcessingScan) {
+      return;
+    }
+
+    await ref.read(cameraProvider.notifier).resume();
+
+    if (_cameraMode == CameraModeEnum.qrScanner) {
+      await ref.read(cameraProvider.notifier).startScanning();
     }
   }
 }
