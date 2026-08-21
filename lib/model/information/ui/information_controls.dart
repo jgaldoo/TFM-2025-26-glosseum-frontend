@@ -129,22 +129,3 @@ class _InformationControlsState extends ConsumerState<InformationControls> {
     );
   }
 }
-
-/**
- * Material(
-    color: Colors.transparent,
-    child: InkWell(
-    onTap: () {
-    widget.askQuestion(textControlNotifier.controller.text);
-    textControlNotifier.controller.clear();
-    },
-    child: Padding(
-    padding: EdgeInsets.all(5),
-    child: GlosseumIcon(
-    GlosseumIcons.send,
-    color: theme.primaryColor,
-    ),
-    ),
-    ),
-    ),
- */

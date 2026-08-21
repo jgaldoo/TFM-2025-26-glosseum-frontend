@@ -1,45 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/core/theme/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/extensions/glosseum_camera_interface_theme.dart';
 
 class QrOverlay extends StatelessWidget {
   final double borderRadius;
   final double borderLength;
   final double borderWidth;
+  final double size;
 
   const QrOverlay({
     super.key,
     required this.borderRadius,
     required this.borderLength,
     required this.borderWidth,
+    required this.size,
   });
 
   @override
   Widget build(BuildContext context) {
-    final overlayColor = cameraInterfaceThemeOf(context)
-        .primaryBackground.withValues(alpha: 0.6);
+    final overlayColor = cameraInterfaceThemeOf(
+      context,
+    ).primaryBackground.withValues(alpha: 0.6);
 
-    return LayoutBuilder(
-        builder: (_, constraints) {
-          final size = constraints.maxWidth * 0.75;
-
-          return Center(
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(borderRadius),
-              ),
-              child: CustomPaint(
-                painter: _QrCornerPainter(
-                  color: overlayColor,
-                  length: size * 0.25,
-                  width: borderWidth,
-                  radius: borderRadius,
-                ),
-              ),
-            ),
-          );
-        }
+    return Center(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: CustomPaint(
+          painter: _QrCornerPainter(
+            color: overlayColor,
+            length: borderLength,
+            width: borderWidth,
+            radius: borderRadius,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -67,44 +64,45 @@ class _QrCornerPainter extends CustomPainter {
     // Top-left
     canvas.drawPath(
       Path()
-          ..moveTo(0, length)
-          ..lineTo(0, radius)
-          ..quadraticBezierTo(0, 0, radius, 0)
-          ..lineTo(length, 0),
+        ..moveTo(0, length)
+        ..lineTo(0, radius)
+        ..quadraticBezierTo(0, 0, radius, 0)
+        ..lineTo(length, 0),
       paint,
     );
 
     // Top-right
     canvas.drawPath(
       Path()
-          ..moveTo(size.width - length, 0)
-          ..lineTo(size.width - radius, 0)
-          ..quadraticBezierTo(size.width, 0, size.width, radius)
-          ..lineTo(size.width, length),
+        ..moveTo(size.width - length, 0)
+        ..lineTo(size.width - radius, 0)
+        ..quadraticBezierTo(size.width, 0, size.width, radius)
+        ..lineTo(size.width, length),
       paint,
     );
 
     // Bottom-left
     canvas.drawPath(
       Path()
-          ..moveTo(0, size.height - length)
-          ..lineTo(0, size.height - radius)
-          ..quadraticBezierTo(0, size.height, radius, size.height)
-          ..lineTo(length, size.height),
+        ..moveTo(0, size.height - length)
+        ..lineTo(0, size.height - radius)
+        ..quadraticBezierTo(0, size.height, radius, size.height)
+        ..lineTo(length, size.height),
       paint,
     );
 
     // Bottom-right
     canvas.drawPath(
       Path()
-          ..moveTo(size.width - length, size.height)
-          ..lineTo(size.width - radius, size.height)
-          ..quadraticBezierTo(size.width,
-              size.height,
-              size.width,
-              size.height - radius
-          )
-          ..lineTo(size.width, size.height - length),
+        ..moveTo(size.width - length, size.height)
+        ..lineTo(size.width - radius, size.height)
+        ..quadraticBezierTo(
+          size.width,
+          size.height,
+          size.width,
+          size.height - radius,
+        )
+        ..lineTo(size.width, size.height - length),
       paint,
     );
   }
@@ -113,5 +111,4 @@ class _QrCornerPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
-
 }

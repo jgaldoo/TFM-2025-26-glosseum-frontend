@@ -264,13 +264,3 @@ class _InformationTextState extends State<InformationText> {
     );
   }
 }
-
-/**
- * RichText(
-    text: TextSpan(
-    style: theme.textTheme.bodyMedium,
-    children: _buildText(),
-    ),
-    textAlign: TextAlign.left,
-    ),
- */
