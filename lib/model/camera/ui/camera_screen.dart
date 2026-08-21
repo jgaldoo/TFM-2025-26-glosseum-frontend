@@ -468,4 +468,20 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       await ref.read(cameraProvider.notifier).startScanning();
     }
   }
+
+  @override
+  void didPop() async {
+    _isRouteActive = false;
+    final state = ref.read(cameraProvider);
+
+    if (!state.isInitialized) {
+      return;
+    }
+
+    await ref.read(cameraProvider.notifier).pause();
+
+    if (_cameraMode == CameraModeEnum.qrScanner) {
+      await ref.read(cameraProvider.notifier).stopScanning();
+    }
+  }
 }

@@ -26,7 +26,10 @@ class CameraNotifier extends _$CameraNotifier {
   CameraState build() => const CameraState();
 
   Future<void> _processCameraImage(CameraImage image) async {
-    if (_camera == null || _isProcessing || state.isProcessingScan) {
+    if (_camera == null ||
+        _isDisposing ||
+        _isProcessing ||
+        state.isProcessingScan) {
       return;
     }
 
