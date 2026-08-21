@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:glosseum_frontend/core/config/app_logging.dart';
 import 'package:glosseum_frontend/core/config/navbar_entries.dart';
 import 'package:glosseum_frontend/core/database/daos/chat_message_dao.dart';
 import 'package:glosseum_frontend/core/database/daos/chat_session_dao.dart';
@@ -32,12 +31,50 @@ class InformationScreen extends ConsumerStatefulWidget {
 }
 
 class _InformationScreenState extends ConsumerState<InformationScreen> {
-  final informationLogger = AppLoggers.information;
   late Information _information;
 
   bool _isAnswerLoading = false;
   bool _isSimplifying = false;
   String? _progressInformation;
+
+  Future<void> _printDB() async {
+    final rowsInfo = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).informationTable)
+        .get();
+
+    final rowsTech = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).technicismTable)
+        .get();
+
+    final rowsTechDef = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).technicismDefinitionTable)
+        .get();
+
+    final rowsTechOcc = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).technicismOccurrenceTable)
+        .get();
+
+    final rowsChatSession = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).chatSessionTable)
+        .get();
+
+    final rowsChatMessage = await ref
+        .watch(glosseumDatabaseProvider)
+        .select(ref.watch(glosseumDatabaseProvider).chatMessageTable)
+        .get();
+
+    debugPrint('In Code: ${_information.technicisms.toString()}');
+    debugPrint(
+      'In DB: ${(await ref.watch(glosseumDatabaseProvider).informationDAO.selectInformationById(_information.id))?.technicisms.toString()}',
+    );
+
+    return;
+  }
 
   Future<void> _simplifyText(BuildContext context, WidgetRef ref) async {
     final ApiResult<Stream<InformationStreamDTO>> simplificationResult =
@@ -62,7 +99,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
 
         await for (final informationStreamDTO
             in informationStreamDTOGenerator) {
-          informationLogger.fine(
+          debugPrint(
             'STREAM EVENT: ${informationStreamDTO.stream} |'
             ' ${informationStreamDTO.content}',
           );
@@ -122,7 +159,7 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
     late ChatMessage receivedMessage;
 
     await for (final messageStreamDTO in messageStreamDTOGenerator) {
-      informationLogger.fine(
+      debugPrint(
         'STREAM EVENT: ${messageStreamDTO.stream} | ${messageStreamDTO.content}',
       );
       switch (messageStreamDTO.stream) {
@@ -167,7 +204,6 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
             _information.chatSession!.history.last,
             _information.chatSession!.id,
           );
-          informationLogger.info('Chat response received.');
       }
     }
 
@@ -182,13 +218,10 @@ class _InformationScreenState extends ConsumerState<InformationScreen> {
           _information.chatSession!.id,
         );
       }
-      informationLogger.warning('Chat response received, no end chunk arrived');
     }
   }
 
   void _onError(ApiErrorType errorType, int statusCode, String message) {
-    informationLogger.severe('$errorType - $statusCode | $message');
-
     showModalBottomSheet(
       context: context,
       enableDrag: false,

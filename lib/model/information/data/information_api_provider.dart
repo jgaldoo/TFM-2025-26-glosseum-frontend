@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:glosseum_frontend/core/config/app_logging.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/network_service.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/chat_message_dto.dart';
@@ -11,8 +10,6 @@ part 'information_api_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class InformationAPI extends _$InformationAPI {
-  final networkLogger = AppLoggers.network;
-
   @override
   FutureOr<void> build() {}
 
@@ -22,7 +19,7 @@ class InformationAPI extends _$InformationAPI {
     final networkService = ref.read(networkServiceProvider);
 
     return networkService.safeRequest<ChatSessionResponseDTO>(() {
-      networkLogger.info('Creating session...');
+      print("Creating session...");
       return networkService.dio.post(
         '/create-session',
         data: chatSessionRequestDTO.toJson(),
@@ -36,7 +33,7 @@ class InformationAPI extends _$InformationAPI {
     final networkService = ref.read(networkServiceProvider);
 
     return networkService.safeStreamRequest<ChatMessageStreamResponseDTO>(() {
-      networkLogger.info('Chatting...');
+      print("Chatting...");
       return networkService.dio.post(
         '/chat_stream/${chatMessageRequestDTO.sessionId}',
         data: chatMessageRequestDTO.toJson(),
@@ -55,7 +52,7 @@ class InformationAPI extends _$InformationAPI {
     final networkService = ref.read(networkServiceProvider);
 
     return networkService.safeStreamRequest<InformationStreamDTO>(() {
-      networkLogger.info('Simplifying...');
+      print('Simplifying...');
       return networkService.dio.post(
         '/simplify_stream',
         data: informationSimplificationRequestDTO.toJson(),

@@ -151,11 +151,7 @@ class _GrabbablePanelState extends ConsumerState<GrabbablePanel> {
           ),
 
           if (widget.title != null)
-            Text(
-              widget.title!,
-              style: theme.textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
+            Text(widget.title!, style: theme.textTheme.titleMedium),
 
           if (tabs.isNotEmpty) ...[
             DefaultTabController(

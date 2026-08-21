@@ -76,6 +76,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    debugPrint(theme.textTheme.headlineMedium?.fontFamily);
+
     return LoadingBlurOverlay(
       isLoading: _isLoading,
       child: Scaffold(

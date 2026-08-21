@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/theme/extensions/glosseum_chat_bubble_theme.dart';
-import 'package:glosseum_frontend/core/theme/extensions/glosseum_link_theme.dart';
 import 'package:glosseum_frontend/core/theme/extensions/glosseum_track_scrollbar_theme.dart';
 import 'package:glosseum_frontend/core/theme/glosseum_colors.dart';
 
@@ -189,10 +188,6 @@ class GlosseumTheme {
       GlosseumTrackScrollbarTheme(
         trackColor: GlosseumColors.primary,
         trackThickness: 1,
-      ),
-      GlosseumLinkTheme(
-        linkColor: GlosseumColors.secondary,
-        linkDecoration: TextDecoration.underline,
       ),
     ],
   );

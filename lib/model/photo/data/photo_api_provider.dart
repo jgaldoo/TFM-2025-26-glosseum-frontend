@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:glosseum_frontend/core/config/app_logging.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/network_service.dart';
 import 'package:glosseum_frontend/model/information/data/dtos/information_dto.dart';
@@ -10,8 +9,6 @@ part 'photo_api_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 class PhotoAPI extends _$PhotoAPI {
-  final networkLogger = AppLoggers.network;
-
   @override
   FutureOr<void> build() {}
 
@@ -31,8 +28,6 @@ class PhotoAPI extends _$PhotoAPI {
         ),
       );
     }
-    
-    networkLogger.info('Starting transcribe request');
 
     return networkService.safeRequest<InformationDTO>(() {
       return networkService.dio.post('/transcribe', data: formData);

@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:glosseum_frontend/core/config/app_logging.dart';
 import 'package:glosseum_frontend/core/enums/api_error_type.dart';
 import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/dio_provider.dart';
@@ -13,7 +12,6 @@ part 'network_service.g.dart';
 
 // Class to abstract error handling on api petitions
 class NetworkService {
-  final networkLogger = AppLoggers.network;
   final Dio dio;
 
   NetworkService(this.dio);
@@ -35,11 +33,11 @@ class NetworkService {
     T Function(dynamic) fromJson,
   ) async {
     try {
-      networkLogger.fine('safeRequest entered');
+      debugPrint('safeRequest entered');
 
-      networkLogger.fine('checking status...');
+      debugPrint('checking status...');
       await checkStatus();
-      networkLogger.fine('status checked');
+      debugPrint('status checked');
 
       final response = await call();
 
@@ -49,7 +47,7 @@ class NetworkService {
         message: response.statusMessage ?? 'OK',
       );
     } on DioException catch (e) {
-      networkLogger.severe('Network Service caught a Dio exception: $e');
+      log('Network Service caught a Dio exception: $e');
       final apiErrorType = dioErrorToApiErrorType(e);
       return ApiResult.error(
         type: apiErrorType,
@@ -57,9 +55,7 @@ class NetworkService {
         message: e.response?.data['detail'] ?? apiErrorType.errorText,
       );
     } catch (e) {
-      networkLogger.severe(
-        'Network Service caught an unexpected exception: $e',
-      );
+      log('Network Service caught an unexpected exception: $e');
 
       return const ApiResult.error(
         type: ApiErrorType.unknown,
@@ -74,11 +70,11 @@ class NetworkService {
     T Function(dynamic) fromJson,
   ) async {
     try {
-      networkLogger.fine('safeStreamRequest entered');
+      debugPrint('safeStreamRequest entered');
 
-      networkLogger.fine('checking status...');
+      debugPrint('checking status...');
       await checkStatus();
-      networkLogger.fine('status checked');
+      debugPrint('status checked');
 
       final response = await call();
 
@@ -106,7 +102,7 @@ class NetworkService {
         message: response.statusMessage ?? 'OK',
       );
     } on DioException catch (e) {
-      networkLogger.severe('Network Service caught a Dio exception: $e');
+      log('Network Service caught a Dio exception: $e');
       final apiErrorType = dioErrorToApiErrorType(e);
       return ApiResult.error(
         type: apiErrorType,
@@ -114,9 +110,7 @@ class NetworkService {
         message: e.response?.data['detail'] ?? apiErrorType.errorText,
       );
     } catch (e) {
-      networkLogger.severe(
-        'Network Service caught an unexpected exception: $e',
-      );
+      log('Network Service caught an unexpected exception: $e');
 
       return const ApiResult.error(
         type: ApiErrorType.unknown,
