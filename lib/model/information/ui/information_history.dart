@@ -139,7 +139,6 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
   }
 
   Widget _buildLoadingItem() {
-    final theme = Theme.of(context);
     return _buildItem(
       child: Align(
         alignment: AlignmentGeometry.center,
@@ -235,9 +234,9 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
                             Padding(
                               padding: EdgeInsetsGeometry.directional(top: 20),
                               child: Text(
-                                'No se ha encontrado ningún resultado. Transcribe'
-                                ' información para visitar aquí la información '
-                                'encontrada.',
+                                'No se ha encontrado ningún resultado. '
+                                'Transcribe información para visitar aquí '
+                                'la información encontrada.',
                                 style: theme.textTheme.labelLarge?.copyWith(
                                   color: theme.hintColor,
                                 ),

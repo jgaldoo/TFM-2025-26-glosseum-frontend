@@ -69,5 +69,10 @@ class GlosseumIcons {
   static const GlosseumIconData plus = GlosseumIconData('${_basePath}plus.svg');
 
   static const GlosseumIconData clock = GlosseumIconData(
-      '${_basePath}clock.svg');
+    '${_basePath}clock.svg',
+  );
+
+  static const GlosseumIconData access_external = GlosseumIconData(
+    '${_basePath}access_external.svg',
+  );
 }

@@ -16,7 +16,7 @@ Dio dio(Ref ref) {
     ),
   );
 
-  if (appConfig.enableLogging) {
+  if (appConfig.enableDioLogging) {
     dio.interceptors.add(LogInterceptor(responseBody: true));
   }
 

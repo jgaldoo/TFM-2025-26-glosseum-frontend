@@ -23,8 +23,6 @@ class TechnicismMarkdownBuilder extends MarkdownElementBuilder {
       decoration: TextDecoration.underline,
     );
 
-    debugPrint('weight: ${preferredStyle?.fontWeight}');
-
     return RichText(
       text: TextSpan(
         children: [
