@@ -75,4 +75,12 @@ class GlosseumIcons {
   static const GlosseumIconData access_external = GlosseumIconData(
     '${_basePath}access_external.svg',
   );
+
+  static const GlosseumIconData chevron_left = GlosseumIconData(
+    '${_basePath}chevron_left.svg',
+  );
+
+  static const GlosseumIconData chevron_right = GlosseumIconData(
+    '${_basePath}chevron_right.svg',
+  );
 }

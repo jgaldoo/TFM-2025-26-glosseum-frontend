@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:glosseum_frontend/core/models/image_attribute_interface.dart';
 import 'package:glosseum_frontend/core/theme/extensions/glosseum_camera_interface_theme.dart';
+import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/widgets/icon_slider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -45,15 +46,12 @@ class ImageSideMenu extends ConsumerWidget {
                   // Ensure no slider can be reached when the menu is closed
                   width: containerWidth * (1 - closingOffset),
                   child: Center(
-                    child: Transform.translate(
-                      offset: const Offset(-5, 0),
-                      child: Icon(
-                        attributes.menuOpen
-                            ? Icons.chevron_right
-                            : Icons.chevron_left,
-                        color: camInterfaceTheme.primaryIconColor,
-                        size: 45,
-                      ),
+                    child: GlosseumIcon(
+                      attributes.menuOpen
+                          ? GlosseumIcons.chevron_right
+                          : GlosseumIcons.chevron_left,
+                      color: camInterfaceTheme.primaryIconColor,
+                      size: 30,
                     ),
                   ),
                 ),
