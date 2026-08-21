@@ -34,7 +34,6 @@ class InformationText extends StatefulWidget {
 
 class _InformationTextState extends State<InformationText> {
   final ScrollController _scrollController = ScrollController();
-  final List<TapGestureRecognizer> _tapRecognizers = [];
 
   void _showDefinition(Technicism technicism) {
     showModalBottomSheet(
@@ -101,9 +100,6 @@ class _InformationTextState extends State<InformationText> {
   @override
   void dispose() {
     _scrollController.dispose();
-    for (final recognizer in _tapRecognizers) {
-      recognizer.dispose();
-    }
     super.dispose();
   }
 

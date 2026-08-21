@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:glosseum_frontend/core/config/app_logging.dart';
 import 'package:glosseum_frontend/core/config/route_observer.dart';
 import 'package:glosseum_frontend/core/database/daos/information_dao.dart';
 import 'package:glosseum_frontend/core/enums/camera_mode_enum.dart';
@@ -7,7 +8,9 @@ import 'package:glosseum_frontend/core/models/api_result.dart';
 import 'package:glosseum_frontend/core/providers/camera_control_notifier.dart';
 import 'package:glosseum_frontend/core/providers/database_providers/glosseum_database_provider.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
+import 'package:glosseum_frontend/core/utils/link_utils.dart';
 import 'package:glosseum_frontend/core/widgets/grabbable_panel/grabbable_panel.dart';
+import 'package:glosseum_frontend/core/widgets/linkified_text.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/nav_entry.dart';
 import 'package:glosseum_frontend/core/widgets/navbar/bottom_navbar.dart';
 import 'package:glosseum_frontend/core/widgets/grabbable_panel/error_grabbable_panel.dart';
@@ -39,6 +42,7 @@ class CameraScreen extends ConsumerStatefulWidget {
 
 class _CameraScreenState extends ConsumerState<CameraScreen>
     with WidgetsBindingObserver, RouteAware {
+  final cameraLogger = AppLoggers.camera;
   late CameraModeEnum _cameraMode;
   late CameraModeEnum _lastCameraMode;
   bool _cameraPaused = false;
@@ -83,6 +87,8 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
         context.push('/information', extra: information);
       },
       error: (errorType, statusCode, message) {
+        cameraLogger.severe('$errorType - $statusCode | $message');
+
         showModalBottomSheet(
           context: context,
           enableDrag: false,
@@ -96,8 +102,6 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
         );
       },
     );
-
-    // context.push(AppScreenEnum.information, info)
   }
 
   void _reloadLastCameraMode(WidgetRef ref) {
@@ -112,12 +116,40 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
   ) async {
     final theme = Theme.of(context);
 
+    final links = getLinks(value);
+
+    final isOneLink =
+        (links.length == 1 &&
+        value.length == links.first.end - links.first.start);
+
     return await showModalBottomSheet(
       context: context,
       builder: (_) {
         return GrabbablePanel(
-          title: 'Contenido del QR',
-          innerContent: Text(value, style: theme.textTheme.titleSmall),
+          title: isOneLink
+              ? '¿Quieres ir al siguiente enlace?'
+              : 'Contenido del QR',
+          innerContent: LinkifiedText(text: value, links: links),
+          bottomNavigationBar: isOneLink
+              ? BottomNavbar(
+                  entries: [
+                    NavEntry(
+                      icon: GlosseumIcons.back,
+                      onTap: (context, ref) async {
+                        return context.pop();
+                      },
+                      label: 'No, atrás',
+                    ),
+                    NavEntry(
+                      icon: GlosseumIcons.access_external,
+                      onTap: (context, ref) async {
+                        await openLink(value);
+                      },
+                      label: 'Sí, adelante',
+                    ),
+                  ],
+                )
+              : null,
         );
       },
     );
@@ -177,6 +209,8 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
           ? CameraModeEnum.qrScanner
           : CameraModeEnum.camera;
     });
+
+    cameraLogger.info('Changed camera mode to $_cameraMode');
   }
 
   @override
@@ -230,6 +264,7 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
       value,
     ) async {
       if (!_isRouteActive || value == null) return;
+      cameraLogger.info('QR code scanned.');
 
       await _qrValueGrabbablePanel(context, value);
       await ref.read(cameraProvider.notifier).finishProcessingScan();
@@ -408,6 +443,8 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
 
   @override
   void didPushNext() async {
+    cameraLogger.info('Pausing camera activities...');
+
     _isRouteActive = false;
     final state = ref.read(cameraProvider);
 
@@ -418,6 +455,8 @@ class _CameraScreenState extends ConsumerState<CameraScreen>
 
   @override
   void didPopNext() async {
+    cameraLogger.info('Resuming camera activities...');
+
     _isRouteActive = true;
     final state = ref.read(cameraProvider);
 
