@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
@@ -34,7 +33,6 @@ class InformationText extends StatefulWidget {
 
 class _InformationTextState extends State<InformationText> {
   final ScrollController _scrollController = ScrollController();
-  final List<TapGestureRecognizer> _tapRecognizers = [];
 
   void _showDefinition(Technicism technicism) {
     showModalBottomSheet(
@@ -101,9 +99,6 @@ class _InformationTextState extends State<InformationText> {
   @override
   void dispose() {
     _scrollController.dispose();
-    for (final recognizer in _tapRecognizers) {
-      recognizer.dispose();
-    }
     super.dispose();
   }
 

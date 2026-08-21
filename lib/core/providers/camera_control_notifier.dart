@@ -113,8 +113,6 @@ class CameraNotifier extends _$CameraNotifier {
     }
     if (rotation == null) return null;
 
-    debugPrint('Rotation: $rotation');
-
     // get image format
     final format = InputImageFormatValue.fromRawValue(image.format.raw);
     // validate format depending on platform
