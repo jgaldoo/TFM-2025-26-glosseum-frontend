@@ -124,10 +124,12 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    hasMore ? '$firstLine...' : firstLine,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Expanded(
+                    child: Text(
+                      hasMore ? '$firstLine...' : firstLine,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ],
               ),
