@@ -1,7 +1,7 @@
 import 'package:markdown/markdown.dart' as md;
 
 class TechnicismInlineSyntax extends md.InlineSyntax {
-  static final String syntax = r'\[\[\|([\s\S]+)\|\]\]';
+  static final String syntax = r'\[\[\|([\s\S]+?)\|\]\]';
 
   TechnicismInlineSyntax() : super(syntax);
 
