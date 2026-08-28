@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:glosseum_frontend/model/technicism/ui/technicism_markdown_body.dart';
 import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
 import 'package:glosseum_frontend/core/widgets/track_scrollbar.dart';
 import 'package:glosseum_frontend/model/information/data/chat_role_enum.dart';
@@ -7,10 +7,6 @@ import 'package:glosseum_frontend/model/information/data/information_type_enum.d
 import 'package:glosseum_frontend/model/information/domain/information.dart';
 import 'package:glosseum_frontend/model/information/ui/information_answer_container.dart';
 import 'package:glosseum_frontend/model/information/ui/information_question_container.dart';
-import 'package:glosseum_frontend/model/technicism/domain/technicism.dart';
-import 'package:glosseum_frontend/model/technicism/ui/technicism_definition_panel.dart';
-import 'package:glosseum_frontend/model/technicism/ui/technicism_inline_syntax.dart';
-import 'package:glosseum_frontend/model/technicism/ui/technicism_markdown_builder.dart';
 import 'package:simple_typing_indicator/simple_typing_indicator.dart';
 
 class InformationText extends StatefulWidget {
@@ -33,13 +29,6 @@ class InformationText extends StatefulWidget {
 
 class _InformationTextState extends State<InformationText> {
   final ScrollController _scrollController = ScrollController();
-
-  void _showDefinition(Technicism technicism) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) => TechnicismDefinitionPanel(technicism: technicism),
-    );
-  }
 
   @override
   void didUpdateWidget(covariant InformationText oldWidget) {
@@ -82,18 +71,6 @@ class _InformationTextState extends State<InformationText> {
         curve: Curves.easeOut,
       );
     });
-  }
-
-  Technicism? _findTechnicism(String technicismForm) {
-    for (final technicism in widget.information.technicisms ?? []) {
-      if (technicism.occurrences.any(
-        (occurrence) => occurrence.inText == technicismForm,
-      )) {
-        return technicism;
-      }
-    }
-
-    return null;
   }
 
   @override
@@ -186,21 +163,8 @@ class _InformationTextState extends State<InformationText> {
                           children: [
                             if (!widget.isSimplifying ||
                                 widget.information.content.isNotEmpty) ...[
-                              MarkdownBody(
-                                data: widget.information.content,
-                                inlineSyntaxes: [TechnicismInlineSyntax()],
-                                builders: {
-                                  'technicism': TechnicismMarkdownBuilder(
-                                    onTap: (text) {
-                                      // Find the corresponding special entity.
-                                      final technicism = _findTechnicism(text);
-
-                                      if (technicism != null) {
-                                        _showDefinition(technicism);
-                                      }
-                                    },
-                                  ),
-                                },
+                              TechnicismMarkdownBody(
+                                information: widget.information,
                               ),
 
                               if (widget.isSimplifying)

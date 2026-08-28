@@ -4,6 +4,7 @@ import 'package:glosseum_frontend/core/providers/database_providers/glosseum_dat
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icon.dart';
 import 'package:glosseum_frontend/core/theme/icons/glosseum_icons.dart';
 import 'package:glosseum_frontend/core/utils/date_format_utils.dart';
+import 'package:glosseum_frontend/core/utils/markdown_utils.dart';
 import 'package:glosseum_frontend/core/widgets/loading_blur_overlay.dart';
 import 'package:glosseum_frontend/core/widgets/track_scrollbar.dart';
 import 'package:glosseum_frontend/model/information/domain/information.dart';
@@ -78,7 +79,13 @@ class _InformationHistoryState extends ConsumerState<InformationHistory> {
 
   Widget _buildInformationSummary(Information information) {
     final theme = Theme.of(context);
-    final firstLine = information.content.split('\n').first;
+    // Get the first two lines to pass through the markdown parser
+    final firstTwoLines = toPlainText(
+      information.content.split('\n').take(2).join('\n'),
+    );
+    final firstLine = firstTwoLines.isNotEmpty
+        ? firstTwoLines.split('\n').first
+        : '';
     final hasMore = information.content.length > firstLine.length;
 
     return GestureDetector(
